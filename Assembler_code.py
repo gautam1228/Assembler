@@ -58,5 +58,3 @@ for line in open:
         elif opcode_dict[line[0]][1]=='F':
             print("calls F")
         
-
- 
