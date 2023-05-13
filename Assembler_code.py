@@ -1,8 +1,8 @@
 opcode_dict = {
     "add": ["00000", "A"],
     "sub": ["00001", "A"],
-    "mov_imm": ["00010", "B"],
-    "mov_reg": ["00011", "C"],
+    "mov": ["00010", "B"],
+    "mov": ["00011", "C"],
     "ld": ["00100", "D"],
     "st": ["00101", "D"],
     "mul": ["00110", "A"],
@@ -23,5 +23,10 @@ opcode_dict = {
 # "A" for arithmetic, "B" for immediate, "C" for register, 
 # "D" for load/store, "E" for jump, and "F" for halt.
 assem_code=open("Assembler/assem_code.txt")
-open=[i.strip("\n") for i in assem_code.readlines()]
+open=[i.strip("\n").split() for i in assem_code if len(i)>1]
 print(open)
+for line in open:
+    if line[0] in opcode_dict:
+        print(line[0])
+
+ 
