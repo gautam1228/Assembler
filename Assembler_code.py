@@ -31,7 +31,7 @@ register_dict = {
     "FLAGS": "111"
 }
 
-def instr_A()
+# def instr_A()
 
 # "A" for arithmetic, "B" for immediate, "C" for register, 
 # "D" for load/store, "E" for jump, and "F" for halt.
