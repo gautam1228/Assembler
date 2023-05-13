@@ -31,7 +31,12 @@ register_dict = {
     "FLAGS": "111"
 }
 
-# def instr_A()
+
+def instr_A(opcode, R1, R2, R3):
+    return opcode+"00"+ register_dict[R1]+ register_dict[R2]+ register_dict[R3]
+
+# def instr_B()
+# def instr_C()
     
 
 
@@ -51,10 +56,6 @@ def instr_F(opcode,):
     unused_bits = "0"*11
     ans = str(opcode) + unused_bits
     return ans
-def instr_A(opcode, R1, R2, R3):
-    return opcode+"00"+ register_dict[R1]+ register_dict[R2]+ register_dict[R3]
-# def instr_B()
-# def instr_C()
 
 # "A" for arithmetic, "B" for immediate, "C" for register, 
 # "D" for load/store, "E" for jump, and "F" for halt.
