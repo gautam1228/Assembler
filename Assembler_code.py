@@ -51,6 +51,10 @@ def instr_F(opcode,):
     unused_bits = "0"*11
     ans = str(opcode) + unused_bits
     return ans
+def instr_A(opcode, R1, R2, R3):
+    return opcode+"00"+ register_dict[R1]+ register_dict[R2]+ register_dict[R3]
+# def instr_B()
+# def instr_C()
 
 # "A" for arithmetic, "B" for immediate, "C" for register, 
 # "D" for load/store, "E" for jump, and "F" for halt.
@@ -60,7 +64,9 @@ for line in open:
     if line[0] in opcode_dict:  
         print(opcode_dict[line[0]][1])
         if opcode_dict[line[0]][1]=='A':
-            print("calls A")
+            #call error function
+            print(line)
+            print(instr_A(opcode_dict[line[0]][0], line[1], line[2], line[3]))
         elif opcode_dict[line[0]][1]=='B':
             print("calls B")
         elif opcode_dict[line[0]][1]=='C':
