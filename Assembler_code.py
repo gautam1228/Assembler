@@ -28,5 +28,3 @@ print(open)
 for line in open:
     if line[0] in opcode_dict:
         print(line[0])
-
- 
