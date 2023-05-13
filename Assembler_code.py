@@ -25,4 +25,3 @@ opcode_dict = {
 assem_code=open("Assembler/assem_code.txt")
 open=assem_code.read()
 print(open)
-
