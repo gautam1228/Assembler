@@ -31,7 +31,26 @@ register_dict = {
     "FLAGS": "111"
 }
 
-def instr_A()
+# def instr_A()
+    
+
+
+# opcode = str, Mem_address = str, Reg = R1 or R2 etc.
+def instr_D(opcode, Reg, Mem_address):
+    r1_ret = register_dict[Reg]
+    unused_bits = "0"
+    ans = str(opcode) + unused_bits + str(r1_ret) + str(Mem_address)
+    return ans
+
+def instr_E(opcode, Mem_address):
+    unused_bits = "0"*4
+    ans = str(opcode) + unused_bits + str(Mem_address)
+    return ans
+
+def instr_F(opcode,):
+    unused_bits = "0"*11
+    ans = str(opcode) + unused_bits
+    return ans
 
 # "A" for arithmetic, "B" for immediate, "C" for register, 
 # "D" for load/store, "E" for jump, and "F" for halt.
@@ -52,4 +71,3 @@ for line in open:
             print("calls E")
         elif opcode_dict[line[0]][1]=='F':
             print("calls F")
-        
