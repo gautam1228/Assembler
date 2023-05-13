@@ -22,7 +22,7 @@ opcode_dict = {
 }
 # "A" for arithmetic, "B" for immediate, "C" for register, 
 # "D" for load/store, "E" for jump, and "F" for halt.
-assem_code=open("assem_code.txt")
+assem_code=open("Assembler/assem_code.txt")
 open=assem_code.read()
 print(open)
 
