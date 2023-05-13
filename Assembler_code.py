@@ -23,5 +23,5 @@ opcode_dict = {
 # "A" for arithmetic, "B" for immediate, "C" for register, 
 # "D" for load/store, "E" for jump, and "F" for halt.
 assem_code=open("Assembler/assem_code.txt")
-open=assem_code.read()
+open=[i.strip("\n") for i in assem_code.readlines()]
 print(open)
