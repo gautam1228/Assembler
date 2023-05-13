@@ -62,19 +62,35 @@ def instr_F(opcode,):
 assem_code=open("Assembler/assem_code.txt")
 open=[i.strip("\n").split() for i in assem_code if len(i)>1]
 for line in open:
-    if line[0] in opcode_dict:  
-        print(opcode_dict[line[0]][1])
-        if opcode_dict[line[0]][1]=='A':
+    if line[0] in opcode_dict:
+        instr_type = opcode_dict[line[0]][1]
+        opcode = opcode_dict[line[0]][0]
+        if instr_type =='A':
             #call error function
             print(line)
-            print(instr_A(opcode_dict[line[0]][0], line[1], line[2], line[3]))
-        elif opcode_dict[line[0]][1]=='B':
+            print(instr_A(opcode, line[1], line[2], line[3]))
+        elif instr_type =='B':
+            #first we'll call the err_func_B
+            #if no error is caught then:
             print("calls B")
-        elif opcode_dict[line[0]][1]=='C':
+        elif instr_type =='C':
+            #first we'll call the err_func_C
+            #if no error is caught then:
             print("calls C")
-        elif opcode_dict[line[0]][1]=='D':
-            print("calls D")
-        elif opcode_dict[line[0]][1]=='E':
-            print("calls E")
-        elif opcode_dict[line[0]][1]=='F':
-            print("calls F")
+        elif instr_type =='D':
+            #first we'll call the err_func_D
+            #if no error is caught then:
+            reg = line[1] # maybe useless but makes the function call a bit intuitive (I guess ?)
+            mem_address = line[2]
+            
+            # bin_instr is the line that we'll write to the output file
+            bin_instr = instr_D(opcode, reg, mem_address)
+        elif instr_type =='E':
+            #first we'll call the err_func_E
+            #if no error is caught then:
+            mem_address = line[1]
+            bin_instr = instr_E(opcode, mem_address)
+        elif instr_type =='F':
+            #first we'll call the err_func_F
+            #if no error is caught then:
+            bin_instr = instr_F(opcode)
