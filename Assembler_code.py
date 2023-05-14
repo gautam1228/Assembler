@@ -30,6 +30,8 @@ register_dict = {
     "FLAGS": "111"
 }
 
+var_list=[]
+
 # def error_e(line):
 #     if int(line[2][1:]) > 127:
 #         print("error E")
@@ -104,20 +106,23 @@ def error_func_A(line): #add R1 R2 R3
 
 
 def error_func_B(line):
-    R1=line[1]
-    if R1=="FLAGS":
-        return "Illegal use of FLAGS register"
-    if R1 not in register_dict:
-        return "Typos in instruction name or register name"
-    Imm_value=line[2]
-    if Imm_value[0]!="$":
-        try:
-            imm_int=int(Imm_value[1:])
-        except ValueError:   
-            return "Illegal Immediate values (more than 7 bits)"
-        if imm_int<0 or imm_int>127:
-            return "Illegal Immediate values (more than 7 bits)"
-    return 1
+    if len(line)<3:
+        R1=line[1]
+        if R1=="FLAGS":
+            return "Illegal use of FLAGS register"
+        if R1 not in register_dict:
+            return "Typos in instruction name or register name"
+        Imm_value=line[2]
+        if Imm_value[0]!="$": #mov R1 $10 R3
+            try:
+                imm_int=int(Imm_value[1:])
+            except ValueError:   
+                return "Illegal Immediate values (more than 7 bits)"
+            if imm_int<0 or imm_int>127:
+                return "Illegal Immediate values (more than 7 bits)"
+        return 1
+    else:
+        return "General Syntax Error"
         
 
 def error_func_C(line):
@@ -155,16 +160,11 @@ def error_func_D(line):
 
 def error_func_E(line):
     mem_address=line[1]
-    if mem_address not in var_list:
-        if mem_address in label_list:
+    if mem_address not in label_list:
+        if mem_address in var_list:
             return "Misuse of labels as variables or vice-versa"
-        try:
-            mem_int=int(mem_address)
-        except ValueError:
-            if is_valid_variable_name(mem_address):
-                return "Variables not declared at the beginning"
-            else:
-                return "General Syntax Error"
+    else:
+        return "Use of Undefined Labels"
 
 
 def check_mov_type(code):
@@ -179,7 +179,10 @@ def check_mov_type(code):
 assem_code=open("Assembler/assem_code.txt")
 open=[i.strip("\n").split() for i in assem_code] 
 
-for line in open:
+#for loop ek aur baaar
+
+for line_no in range(len(open)):
+    line=open[line_no]
     if len(line) and line[0] in opcode_dict:
         instr_type = opcode_dict[line[0]][1]
         opcode = opcode_dict[line[0]][0]
@@ -225,6 +228,13 @@ for line in open:
             bin_instr = instr_F(opcode)
             print(bin_instr)
     elif len(line)==0:
+        pass
+    elif line[0]=="var":
+        try:
+            var_list.append(line[1])
+        except Exception:
+            print("General Syntax Error")
+    elif ":" == line[-1]:
         pass
     else:
         print("Typos in instruction name or register name")
