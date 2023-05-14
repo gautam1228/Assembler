@@ -252,15 +252,17 @@ for line_no in range(len(open)):
             quit()
             
     elif line[0]=="var":
-        try:
-            line[1]
-        except Exception:
-            print("General Syntax Error")
-            quit()
-        var_dict[line[1]] = line_no+(len(open)-var_count)
-        if not is_valid_variable_name(line[1]):
-           print("General Syntax Error") 
-           quit()
+        if len(line)==2:
+            try:
+                line[1]
+            except Exception:
+                print("General Syntax Error")
+                quit()
+            var_dict[line[1]] = line_no+(len(open)-var_count)
+            if not is_valid_variable_name(line[1]):
+                print("General Syntax Error") 
+                quit()
+        print("General Syntax Error")
     else:
         print("Typos in instruction name or register name")
         quit()
