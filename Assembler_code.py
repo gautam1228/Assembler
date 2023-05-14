@@ -61,7 +61,7 @@ def instr_F(opcode,):
 # "D" for load/store, "E" for jump, and "F" for halt.
 
 assem_code=open("Assembler/assem_code.txt")
-open=[i.strip("\n").split() for i in assem_code if len(i)>1]
+open=[i.strip("\n").split() for i in assem_code] 
 for line in open:
     if line[0] in opcode_dict:
         instr_type = opcode_dict[line[0]][1]
