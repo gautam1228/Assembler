@@ -220,33 +220,42 @@ for line_no in range(len(open)):
             instr_type,opcode=check_mov_type(line)
             
         if instr_type =='A':
-            error_func_A(line)
+            print(error_func_A(line))
+            quit()
         elif instr_type =='B':
             #first we'll call the err_func_B
-            error_func_B(line)
+            print(error_func_B(line))
+            quit()
 
         elif instr_type =='C':
             #first we'll call the err_func_C
-            error_func_C(line, opcode)
+            print(error_func_C(line, opcode))
+            quit()
 
         elif instr_type =='D':
             #first we'll call the err_func_D
-            error_func_D(line)
-
+            print(error_func_D(line))
+            quit()
+            
         elif instr_type =='E':
             #first we'll call the err_func_E
-            error_func_E(line)
-
+            print(error_func_E(line))
+            quit()
+            
         elif instr_type =='F':
             #first we'll call the err_func_F
             #if no error is caught then:
-            error_func_F(line)
-
+            print(error_func_F(line))
+            quit()
+            
     elif line[0]=="var":
         try:
-            var_dict[line[1]] = line_no+(len(open)-var_count)
+            line[1]
         except Exception:
             print("General Syntax Error")
+        var_dict[line[1]] = line_no+(len(open)-var_count)
+        if not is_valid_variable_name(line[1]):
+           print("General Syntax Error") 
     else:
         print("Typos in instruction name or register name")
         
@@ -291,4 +300,5 @@ for line_no in range(len(open)):
             print(bin_instr)
     elif line[0]=="var":
         pass
+    
 
