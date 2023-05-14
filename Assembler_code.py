@@ -32,27 +32,7 @@ register_dict = {
 
 var_list=[]
 label_list = []
-# def error_e(line):
-#     if int(line[2][1:]) > 127:
-#         print("error E")
-# def error_g():
-#     if len(open[0]) != 2 or open[0][0] != 'var':
-#         print("error G")
-# # assem_code=open("assem_code.txt")
-# # open=assem_code.read()
-# # print(open)
 
-# def error_h_i():
-#     flag = False
-#     for i in range(len(open)):
-#         if 'hlt' in open[i]:
-#             flag = True
-#             break
-#     if flag == False:
-#         print("error H")
-#     elif i != len(open) - 1:
-#         print("error I")
-# error_h_i()
 # opcode = str, Mem_address = str, Reg = R1 or R2 etc.
 def instr_A(opcode, R1, R2, R3):
     return opcode+"00"+ register_dict[R1]+ register_dict[R2]+ register_dict[R3]
@@ -71,7 +51,7 @@ def instr_D(opcode, Reg, Mem_address):
 
 def instr_E(opcode, Mem_address):
     unused_bits = "0"*4
-    ans = str(opcode) + unused_bits + str(Mem_address)
+    ans = str(opcode) + unused_bits + str(Mem_address) #0011_0000_label_1
     return ans
 
 def instr_F(opcode,):
@@ -94,41 +74,45 @@ def is_valid_variable_name(name):
     return True
 
 
-def error_func_A(line): #add R1 R2 R3
-    Register_list=[line[1], line[2], line[3]]
-    for i in Register_list:
-        if i=="FLAGS":
-            return "Illegal use of FLAGS register"
-        if i not in register_dict:
-            return "Typos in instruction name or register name"
-    return 1
-    
+def error_func_A(line): #add R1 R2 R3 
+    if len(line)==4:
+        Register_list=[line[1], line[2], line[3]] 
+        for i in Register_list:
+            if i=="FLAGS":
+                return "Illegal use of FLAGS register"
+            if i not in register_dict:
+                return "Typos in instruction name or register name"
+        return 1
+    else:
+        return "General Syntax Error"
 
 
 def error_func_B(line):
-    if len(line)<3:
+    if len(line)==3:
         R1=line[1]
         if R1=="FLAGS":
             return "Illegal use of FLAGS register"
         if R1 not in register_dict:
             return "Typos in instruction name or register name"
         Imm_value=line[2]
-        if Imm_value[0]!="$": #mov R1 $10 R3
+        if Imm_value[0]=="$": #mov R1 $10 R3
             try:
                 imm_int=int(Imm_value[1:])
             except ValueError:   
                 return "Illegal Immediate values (more than 7 bits)"
             if imm_int<0 or imm_int>127:
                 return "Illegal Immediate values (more than 7 bits)"
-        return 1
+            return 1
+        else:
+            return "General Syntax Error"
     else:
         return "General Syntax Error"
         
 
-def error_func_C(line):
+def error_func_C(line, opcode):
     R1=line[1]
     R2=line[2]
-    if R1=="FLAGS":
+    if R1=="FLAGS" and (R2=="FLAGS" and opcode!="00011"):
         return "Illegal use of FLAGS register"
     if R1 not in register_dict:
         return "Typos in instruction name or register name"
@@ -167,39 +151,41 @@ def error_func_E(line):
         return "Use of Undefined Labels"
     
 
-def check_mov_type(code):
-    if "$" in code:
-        return opcode_dict[code[0]][1][1], opcode_dict[code[0]][1][0]
+def check_mov_type(line):
+    if "$" in "".join(line):
+        return opcode_dict[line[0]][1][1], opcode_dict[line[0]][1][0]
     else:
-        return opcode_dict[code[0]][0][1], opcode_dict[code[0]][0][0]   
+        return opcode_dict[line[0]][0][1], opcode_dict[line[0]][0][0]   
 
-# "A" for arithmetic, "B" for immediate, "C" for register, 
+# "A" for arithmetic, "B" for immediate, "C" for register,
 # "D" for load/store, "E" for jump, and "F" for halt.
 
 assem_code=open("Assembler/assem_code.txt")
-open=[i.strip("\n").split() for i in assem_code] 
+open=[i.strip("\n").split(' ') for i in assem_code] 
 
 #for loop for label list as well as halt error
 for line_no in range(len(open)):
     line=open[line_no]
-    if len(line) == 1 and line[-1][-1] == ":":
-        label_list.append(line[-1])
+    if ":" in line:
+        if line[0][-1] == ":":
+            label_list.append(line[0])
+        else:
+            print("General Syntax Error")
+            
+    
     
 #printing missing halt error
 
 if open[-1] != ['hlt']:
-    print("missing halt error")
+    print("Missing hlt error")
 
 # main for loop
 for line_no in range(len(open)):
 
     line=open[line_no]
 
-    flag = False
-    if line == ['hlt']:
-        flag = True
-    if flag == True and line_no != len(open) - 1:
-        print("error i")   
+    if line == ['hlt'] and line_no != len(open) - 1:
+        print("hlt not being used as the last instruction")   
     
     if len(line) and line[0] in opcode_dict:
         instr_type = opcode_dict[line[0]][1]
@@ -220,7 +206,7 @@ for line_no in range(len(open)):
             print(bin_instr)
         elif instr_type =='C':
             #first we'll call the err_func_C
-            error_func_C(line)
+            error_func_C(line, opcode)
             #if no error is caught then:
             bin_instr=instr_C(opcode, line[1], line[2])
             print(bin_instr)
