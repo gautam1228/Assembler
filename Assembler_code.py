@@ -133,19 +133,19 @@ def error_func_D(line, line_no):
     if len(line)==3:   
         R1=line[1]
         if R1=="FLAGS":
-            return "Illegal use of FLAGS register" +" in line " + str(line_no)
+            return "Illegal use of FLAGS register" +"error in line " + str(line_no)
         if R1 not in register_dict:
-            return "Typos in instruction name or register name" +" in line " + str(line_no)
+            return "Typos in instruction name or register name" +" error in line " + str(line_no)
         
         mem_address=line[2]
         if mem_address not in var_dict:
             if mem_address in label_dict:
-                return "Misuse of labels as variables or vice-versa"+" in line " + str(line_no)
+                return "Misuse of labels as variables or vice-versa"+" error in line " + str(line_no)
             try:
                 mem_int=int(mem_address)
             except ValueError:
                 if is_valid_variable_name(mem_address):
-                    return "Variables not declared at the beginning"+" in line " + str(line_no)
+                    return "Variables not declared at the beginning"+" error in line " + str(line_no)
                 else:
                     return "General Syntax Error5"+" in line " + str(line_no)
         return 1
