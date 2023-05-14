@@ -1,8 +1,7 @@
 opcode_dict = {
     "add": ["00000", "A"],
     "sub": ["00001", "A"],
-    "mov": ["00010", "B"],
-    "mov": ["00011", "C"],
+    "mov": [["00010", "B"],["00011", "C"]],
     "ld": ["00100", "D"],
     "st": ["00101", "D"],
     "mul": ["00110", "A"],
@@ -31,29 +30,6 @@ register_dict = {
     "FLAGS": "111"
 }
 
-# def instr_A()
-
-# "A" for arithmetic, "B" for immediate, "C" for register, 
-# "D" for load/store, "E" for jump, and "F" for halt.
-assem_code=open("Assembler/assem_code.txt")
-open=[i.strip("\n").split() for i in assem_code if len(i)>1]
-print(open)
-# for line in open:
-    # if line[0] in opcode_dict:  
-    #     print(opcode_dict[line[0]][1])
-        # if opcode_dict[line[0]][1]=='A':
-        #     print("calls A")
-        # elif opcode_dict[line[0]][1]=='B':
-        #     print("calls B")
-        # elif opcode_dict[line[0]][1]=='C':
-        #     print("calls C")
-        # elif opcode_dict[line[0]][1]=='D':
-        #     print("calls D")
-        # elif opcode_dict[line[0]][1]=='E':
-        #     print("calls E")
-        # elif opcode_dict[line[0]][1]=='F':
-        #     print("calls F")
-
 def error_e(line):
     if int(line[2][1:]) > 127:
         print("error E")
@@ -75,3 +51,82 @@ def error_h_i():
     elif i != len(open) - 1:
         print("error I")
 error_h_i()
+# opcode = str, Mem_address = str, Reg = R1 or R2 etc.
+def instr_A(opcode, R1, R2, R3):
+    return opcode+"00"+ register_dict[R1]+ register_dict[R2]+ register_dict[R3]
+
+def instr_B(opcode, R1, Imm_value):
+    return opcode+"0"+ register_dict[R1] + "".join([str(i) for i in bin(int(Imm_value[1:]))[2:].zfill(7)])
+    
+def instr_C(opcode, R1, R2):
+    return opcode + "0"*5 + register_dict[R1] + register_dict[R2]
+
+def instr_D(opcode, Reg, Mem_address):
+    r1_ret = register_dict[Reg]
+    unused_bits = "0"
+    ans = str(opcode) + unused_bits + str(r1_ret) + str(Mem_address)
+    return ans
+
+def instr_E(opcode, Mem_address):
+    unused_bits = "0"*4
+    ans = str(opcode) + unused_bits + str(Mem_address)
+    return ans
+
+def instr_F(opcode,):
+    unused_bits = "0"*11
+    ans = str(opcode) + unused_bits
+    return ans
+
+def check_mov_type(code):
+    if "$" in code:
+        return opcode_dict[code[0]][1][1], opcode_dict[code[0]][1][0]
+    else:
+        return opcode_dict[code[0]][0][1], opcode_dict[code[0]][0][0]   
+
+# "A" for arithmetic, "B" for immediate, "C" for register, 
+# "D" for load/store, "E" for jump, and "F" for halt.
+
+assem_code=open("Assembler/assem_code.txt")
+open=[i.strip("\n").split() for i in assem_code] 
+
+for line in open:
+    if len(line) and line[0] in opcode_dict:
+        instr_type = opcode_dict[line[0]][1]
+        opcode = opcode_dict[line[0]][0]
+        
+        if line[0]=="mov":
+            instr_type,opcode=check_mov_type(line)
+            
+        if instr_type =='A':
+            #call error function
+            bin_instr=instr_A(opcode, line[1], line[2], line[3])
+            print(bin_instr)
+        elif instr_type =='B':
+            #first we'll call the err_func_B
+            #if no error is caught then:
+            bin_instr=instr_B(opcode, line[1], line[2])
+            print(bin_instr)
+        elif instr_type =='C':
+            #first we'll call the err_func_C
+            #if no error is caught then:
+            bin_instr=instr_C(opcode, line[1], line[2])
+            print(bin_instr)
+        elif instr_type =='D':
+            #first we'll call the err_func_D
+            #if no error is caught then:
+            reg = line[1] # maybe useless but makes the function call a bit intuitive (I guess ?)
+            mem_address = line[2]
+            # bin_instr is the line that we'll write to the output file
+            bin_instr = instr_D(opcode, reg, mem_address)
+            print(bin_instr)
+        elif instr_type =='E':
+            #first we'll call the err_func_E
+            #if no error is caught then:
+            mem_address = line[1]
+            bin_instr = instr_E(opcode, mem_address)
+            print(bin_instr)
+        elif instr_type =='F':
+            #first we'll call the err_func_F
+            #if no error is caught then:
+            bin_instr = instr_F(opcode)
+            print(bin_instr)
