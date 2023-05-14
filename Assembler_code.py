@@ -86,7 +86,7 @@ def error_func_A(line,line_no): #add R1 R2 R3
             if i=="FLAGS":
                 return "Illegal use of FLAGS register" +" in line " + str(line_no+1)
             if i not in register_dict:
-                return "Typos in instruction name or register name" +" in line  " + str(line_no+1)
+                return "Typos in instruction name or register name" +" in line " + str(line_no+1)
         return 1
     else:
         return "General Syntax Error1"+" in line " + str(line_no+1)
@@ -288,7 +288,7 @@ for line_no in range(len(open)):
             print("General Syntax Error12"+" in line " + str(line_no+1))
             quit()
     else:
-        print("Typos in instruction name or register name"+"Error in line " + str(line_no+1))
+        print("Typos in instruction name or register name"+" Error in line " + str(line_no+1))
         quit()
         
 for line_no in range(len(open)):

@@ -5,5 +5,7 @@ ld R1 var1
 ld R2 var2
 st R3 var3
 jmp hlt_label
-hlt_label: hlt
+jgt label3
 add R1 R2 R3
+label3: sub R1 R2 R3
+hlt_label: hlt
