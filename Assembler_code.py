@@ -31,7 +31,7 @@ register_dict = {
 }
 
 var_list=[]
-
+label_list = []
 # def error_e(line):
 #     if int(line[2][1:]) > 127:
 #         print("error E")
@@ -165,7 +165,7 @@ def error_func_E(line):
             return "Misuse of labels as variables or vice-versa"
     else:
         return "Use of Undefined Labels"
-
+    
 
 def check_mov_type(code):
     if "$" in code:
@@ -179,10 +179,28 @@ def check_mov_type(code):
 assem_code=open("Assembler/assem_code.txt")
 open=[i.strip("\n").split() for i in assem_code] 
 
-#for loop ek aur baaar
-
+#for loop for label list as well as halt error
 for line_no in range(len(open)):
     line=open[line_no]
+    if len(line) == 1 and line[-1][-1] == ":":
+        label_list.append(line[-1])
+    
+#printing missing halt error
+
+if open[-1] != ['hlt']:
+    print("missing halt error")
+
+# main for loop
+for line_no in range(len(open)):
+
+    line=open[line_no]
+
+    flag = False
+    if line == ['hlt']:
+        flag = True
+    if flag == True and line_no != len(open) - 1:
+        print("error i")   
+    
     if len(line) and line[0] in opcode_dict:
         instr_type = opcode_dict[line[0]][1]
         opcode = opcode_dict[line[0]][0]
@@ -234,7 +252,8 @@ for line_no in range(len(open)):
             var_list.append(line[1])
         except Exception:
             print("General Syntax Error")
-    elif ":" == line[-1]:
+    elif ":" == line[0][-1]: 
         pass
     else:
         print("Typos in instruction name or register name")
+
