@@ -48,9 +48,7 @@ def instr_D(opcode, Reg, Mem_address):
     r1_ret = register_dict[Reg]
     unused_bits = "0"
     if mem_address in var_dict:
-        ans = str(opcode) + unused_bits + str(bin(var_dict[mem_address])[2:].zfill(7))
-    else:
-        ans = str(opcode) + unused_bits + str(Mem_address)
+        ans = str(opcode) + unused_bits + r1_ret + str(bin(var_dict[mem_address])[2:].zfill(7))
     return ans
 
 def instr_E(opcode, Mem_address):
@@ -155,7 +153,6 @@ def error_func_D(line):
         return "General Syntax Error"
         
 
-
 def error_func_E(line):
     if len(line)==1:
         mem_address=line[1]
@@ -176,9 +173,9 @@ def error_func_F(line):
 
 def check_mov_type(line):
     if "$" in "".join(line):
-        return opcode_dict[line[0]][1][1], opcode_dict[line[0]][1][0]
+        return opcode_dict[line[0]][0][1], opcode_dict[line[0]][0][0]
     else:
-        return opcode_dict[line[0]][0][1], opcode_dict[line[0]][0][0]   
+        return opcode_dict[line[0]][1][1], opcode_dict[line[0]][1][0]   
 
 # "A" for arithmetic, "B" for immediate, "C" for register,
 # "D" for load/store, "E" for jump, and "F" for halt.
@@ -189,24 +186,27 @@ open=[i.strip("\n").split(' ') for i in assem_code]
 #for loop for label list
 for line_no in range(len(open)):
     line=open[line_no]
-    if ":" in line:
+    if ":" in "".join(line):
         if line[0][-1] == ":":
-            label_dict[line[0]]=line_no
+            label_dict[line[0][:-1]]=line_no
         else:
             print("General Syntax Error")
     elif line[0] == "var":
         var_count+=1
             
 #printing missing halt error
-if "hlt" in open[-1]:
+if "hlt" not in open[-1]:
     print("Missing hlt error")
 
 # main for loop
 for line_no in range(len(open)):
 
     line=open[line_no]
-
-    if line[0][-1]==":" and len(line[0])>1:
+    
+    if line==['']:
+        continue
+    
+    if line[0][-1]==":" and len(line[0])>1: #remove label prefix
         line.pop(0)
         
     if line == ['hlt'] and line_no != len(open) - 1:
@@ -221,51 +221,74 @@ for line_no in range(len(open)):
             
         if instr_type =='A':
             error_func_A(line)
-            bin_instr=instr_A(opcode, line[1], line[2], line[3])
-            print(bin_instr)
         elif instr_type =='B':
             #first we'll call the err_func_B
             error_func_B(line)
-            #if no error is caught then:
-            bin_instr=instr_B(opcode, line[1], line[2])
-            print(bin_instr)
+
         elif instr_type =='C':
             #first we'll call the err_func_C
             error_func_C(line, opcode)
-            #if no error is caught then:
-            bin_instr=instr_C(opcode, line[1], line[2])
-            print(bin_instr)
+
         elif instr_type =='D':
             #first we'll call the err_func_D
             error_func_D(line)
+
+        elif instr_type =='E':
+            #first we'll call the err_func_E
+            error_func_E(line)
+
+        elif instr_type =='F':
+            #first we'll call the err_func_F
             #if no error is caught then:
+            error_func_F(line)
+
+    elif line[0]=="var":
+        try:
+            var_dict[line[1]] = line_no+(len(open)-var_count)
+        except Exception:
+            print("General Syntax Error")
+    else:
+        print("Typos in instruction name or register name")
+        
+for line_no in range(len(open)):
+
+    line=open[line_no]
+    
+    if line==['']:
+        continue
+    
+    if line[0][-1]==":" and len(line[0])>1: #remove label prefix
+        line.pop(0)
+    
+    if len(line) and line[0] in opcode_dict:
+        instr_type = opcode_dict[line[0]][1]
+        opcode = opcode_dict[line[0]][0]
+        
+        if line[0]=="mov":
+            instr_type,opcode=check_mov_type(line)
+        
+        if instr_type =='A':
+            bin_instr=instr_A(opcode, line[1], line[2], line[3])
+            print(bin_instr)
+        elif instr_type =='B':
+            bin_instr=instr_B(opcode, line[1], line[2])
+            print(bin_instr)
+        elif instr_type =='C':
+            bin_instr=instr_C(opcode, line[1], line[2])
+            print(bin_instr)
+        elif instr_type =='D':
             reg = line[1] # maybe useless but makes the function call a bit intuitive (I guess ?)
             mem_address = line[2]
             # bin_instr is the line that we'll write to the output file
             bin_instr = instr_D(opcode, reg, mem_address)
             print(bin_instr)
         elif instr_type =='E':
-            #first we'll call the err_func_E
-            error_func_E(line)
-            #if no error is caught then:
             mem_address = line[1]
             bin_instr = instr_E(opcode, mem_address)
             print(bin_instr)
         elif instr_type =='F':
-            #first we'll call the err_func_F
-            #if no error is caught then:
-            error_func_F(line)
             bin_instr = instr_F(opcode)
             print(bin_instr)
-    elif len(line)==0:
-        pass
     elif line[0]=="var":
-        try:
-            var_dict[line[0]] = line_no+(len(open)-var_count)
-        except Exception:
-            print("General Syntax Error")
-    elif ":" == line[0][-1]: 
         pass
-    else:
-        print("Typos in instruction name or register name")
 
