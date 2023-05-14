@@ -31,27 +31,47 @@ register_dict = {
     "FLAGS": "111"
 }
 
-def instr_A()
+# def instr_A()
 
 # "A" for arithmetic, "B" for immediate, "C" for register, 
 # "D" for load/store, "E" for jump, and "F" for halt.
 assem_code=open("Assembler/assem_code.txt")
 open=[i.strip("\n").split() for i in assem_code if len(i)>1]
-for line in open:
-    if line[0] in opcode_dict:  
-        print(opcode_dict[line[0]][1])
-        if opcode_dict[line[0]][1]=='A':
-            print("calls A")
-        elif opcode_dict[line[0]][1]=='B':
-            print("calls B")
-        elif opcode_dict[line[0]][1]=='C':
-            print("calls C")
-        elif opcode_dict[line[0]][1]=='D':
-            print("calls D")
-        elif opcode_dict[line[0]][1]=='E':
-            print("calls E")
-        elif opcode_dict[line[0]][1]=='F':
-            print("calls F")
-        
+print(open)
+# for line in open:
+    # if line[0] in opcode_dict:  
+    #     print(opcode_dict[line[0]][1])
+        # if opcode_dict[line[0]][1]=='A':
+        #     print("calls A")
+        # elif opcode_dict[line[0]][1]=='B':
+        #     print("calls B")
+        # elif opcode_dict[line[0]][1]=='C':
+        #     print("calls C")
+        # elif opcode_dict[line[0]][1]=='D':
+        #     print("calls D")
+        # elif opcode_dict[line[0]][1]=='E':
+        #     print("calls E")
+        # elif opcode_dict[line[0]][1]=='F':
+        #     print("calls F")
 
- 
+def error_e(line):
+    if int(line[2][1:]) > 127:
+        print("error E")
+def error_g():
+    if len(open[0]) != 2 or open[0][0] != 'var':
+        print("error G")
+# assem_code=open("assem_code.txt")
+# open=assem_code.read()
+# print(open)
+
+def error_h_i():
+    flag = False
+    for i in range(len(open)):
+        if 'hlt' in open[i]:
+            flag = True
+            break
+    if flag == False:
+        print("error H")
+    elif i != len(open) - 1:
+        print("error I")
+error_h_i()
