@@ -30,8 +30,9 @@ register_dict = {
     "FLAGS": "111"
 }
 
-var_list=[]
-label_list = []
+var_dict={}
+label_dict = {}
+var_count=0
 
 # opcode = str, Mem_address = str, Reg = R1 or R2 etc.
 def instr_A(opcode, R1, R2, R3):
@@ -46,12 +47,18 @@ def instr_C(opcode, R1, R2):
 def instr_D(opcode, Reg, Mem_address):
     r1_ret = register_dict[Reg]
     unused_bits = "0"
-    ans = str(opcode) + unused_bits + str(r1_ret) + str(Mem_address)
+    if mem_address in var_dict:
+        ans = str(opcode) + unused_bits + str(bin(var_dict[mem_address])[2:].zfill(7))
+    else:
+        ans = str(opcode) + unused_bits + str(Mem_address)
     return ans
 
 def instr_E(opcode, Mem_address):
     unused_bits = "0"*4
-    ans = str(opcode) + unused_bits + str(Mem_address) #0011_0000_label_1
+    if mem_address in label_dict:
+        ans = str(opcode) + unused_bits + str(bin(label_dict[mem_address]-var_count)[2:].zfill(7))
+    else:
+        ans = str(opcode) + unused_bits + str(Mem_address) #0011_0000_label_1
     return ans
 
 def instr_F(opcode,):
@@ -110,46 +117,62 @@ def error_func_B(line):
         
 
 def error_func_C(line, opcode):
-    R1=line[1]
-    R2=line[2]
-    if R1=="FLAGS" and (R2=="FLAGS" and opcode!="00011"):
-        return "Illegal use of FLAGS register"
-    if R1 not in register_dict:
-        return "Typos in instruction name or register name"
-    if R2 not in register_dict:
-        return "Typos in instruction name or register name"
+    if len(line)==3:
+        R1=line[1]
+        R2=line[2]
+        if R1=="FLAGS" and (R2=="FLAGS" and opcode!="00011"):
+            return "Illegal use of FLAGS register"
+        if R1 not in register_dict:
+            return "Typos in instruction name or register name"
+        if R2 not in register_dict:
+            return "Typos in instruction name or register name"
+    else:
+        return "General Syntax Error"
     return 1
     
 
 def error_func_D(line):
-    R1=line[1]
-    if R1=="FLAGS":
-        return "Illegal use of FLAGS register"
-    if R1 not in register_dict:
-        return "Typos in instruction name or register name"
-    
-    mem_address=line[2]
-    if mem_address not in var_list:
-        if mem_address in label_list:
-            return "Misuse of labels as variables or vice-versa"
-        try:
-            mem_int=int(mem_address)
-        except ValueError:
-            if is_valid_variable_name(mem_address):
-                return "Variables not declared at the beginning"
-            else:
-                return "General Syntax Error"
+    if len(line)==3:   
+        R1=line[1]
+        if R1=="FLAGS":
+            return "Illegal use of FLAGS register"
+        if R1 not in register_dict:
+            return "Typos in instruction name or register name"
+        
+        mem_address=line[2]
+        if mem_address not in var_dict:
+            if mem_address in label_dict:
+                return "Misuse of labels as variables or vice-versa"
+            try:
+                mem_int=int(mem_address)
+            except ValueError:
+                if is_valid_variable_name(mem_address):
+                    return "Variables not declared at the beginning"
+                else:
+                    return "General Syntax Error"
+        return 1
+    else:
+        return "General Syntax Error"
         
 
 
 def error_func_E(line):
-    mem_address=line[1]
-    if mem_address not in label_list:
-        if mem_address in var_list:
-            return "Misuse of labels as variables or vice-versa"
+    if len(line)==1:
+        mem_address=line[1]
+        if mem_address not in label_dict:
+            if mem_address in var_dict:
+                return "Misuse of labels as variables or vice-versa"
+        else:
+            return "Use of Undefined Labels"
+        return 1
     else:
-        return "Use of Undefined Labels"
-    
+        return "General Syntax Error"
+        
+def error_func_F(line):
+    if len(line)==1:
+        return 1
+    else:
+        "General Syntax Error"   
 
 def check_mov_type(line):
     if "$" in "".join(line):
@@ -163,20 +186,19 @@ def check_mov_type(line):
 assem_code=open("Assembler/assem_code.txt")
 open=[i.strip("\n").split(' ') for i in assem_code] 
 
-#for loop for label list as well as halt error
+#for loop for label list
 for line_no in range(len(open)):
     line=open[line_no]
     if ":" in line:
         if line[0][-1] == ":":
-            label_list.append(line[0])
+            label_dict[line[0]]=line_no
         else:
             print("General Syntax Error")
+    elif line[0] == "var":
+        var_count+=1
             
-    
-    
 #printing missing halt error
-
-if open[-1] != ['hlt']:
+if "hlt" in open[-1]:
     print("Missing hlt error")
 
 # main for loop
@@ -184,6 +206,9 @@ for line_no in range(len(open)):
 
     line=open[line_no]
 
+    if line[0][-1]==":" and len(line[0])>1:
+        line.pop(0)
+        
     if line == ['hlt'] and line_no != len(open) - 1:
         print("hlt not being used as the last instruction")   
     
@@ -229,13 +254,14 @@ for line_no in range(len(open)):
         elif instr_type =='F':
             #first we'll call the err_func_F
             #if no error is caught then:
+            error_func_F(line)
             bin_instr = instr_F(opcode)
             print(bin_instr)
     elif len(line)==0:
         pass
     elif line[0]=="var":
         try:
-            var_list.append(line[1])
+            var_dict[line[0]] = line_no+(len(open)-var_count)
         except Exception:
             print("General Syntax Error")
     elif ":" == line[0][-1]: 
