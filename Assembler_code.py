@@ -183,21 +183,26 @@ def check_mov_type(line,line_no):
 assem_code=open("Assembler/assem_code.txt")
 open=[i.strip("\n").split(' ') for i in assem_code] 
 
+hlt_Flag=False
 #for loop for label list
 for line_no in range(len(open)):
     line=open[line_no]
     if ":" in "".join(line):
         if line[0][-1] == ":":
             label_dict[line[0][:-1]]=line_no
+            if line[1]=="hlt":
+                hlt_Flag=True
         else:
             print("General Syntax Error9"+" in line " + str(line_no+1)) 
             quit()
     elif line[0] == "var":
         var_count+=1
+    elif line[0] =="hlt":
+        hlt_Flag=True
             
-#printing missing halt error
-if "hlt" not in open[-1]:
-    print("Missing hlt Error")
+#printing missing halt Instructions
+if not hlt_Flag:
+    print("Missing hlt instruction")
     quit()
 
 # main for loop
@@ -216,7 +221,7 @@ for line_no in range(len(open)):
         line.pop(0)
         
     if line == ['hlt'] and line_no != len(open) - 1:
-        print("hlt not being used as the last instruction"+"Error in line " + str(line_no+1))   
+        print("hlt not being used as the last instruction"+" Error in line " + str(line_no+1))   
         quit()
     
     if len(line) and line[0] in opcode_dict:
