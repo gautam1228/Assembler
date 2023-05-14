@@ -31,16 +31,16 @@ register_dict = {
     "FLAGS": "111"
 }
 
-
+# opcode = str, Mem_address = str, Reg = R1 or R2 etc.
 def instr_A(opcode, R1, R2, R3):
     return opcode+"00"+ register_dict[R1]+ register_dict[R2]+ register_dict[R3]
 
-# def instr_B()
-# def instr_C()
+def instr_B(opcode, R1, Imm_value):
+    return opcode+"0"+ R1 + [str(i) for i in bin(Imm_value)[2:].zfill(7)] 
     
+def instr_C(opcode, R1, R2):
+    return opcode + "0"*5 + R1, R2
 
-
-# opcode = str, Mem_address = str, Reg = R1 or R2 etc.
 def instr_D(opcode, Reg, Mem_address):
     r1_ret = register_dict[Reg]
     unused_bits = "0"
@@ -59,6 +59,7 @@ def instr_F(opcode,):
 
 # "A" for arithmetic, "B" for immediate, "C" for register, 
 # "D" for load/store, "E" for jump, and "F" for halt.
+
 assem_code=open("Assembler/assem_code.txt")
 open=[i.strip("\n").split() for i in assem_code if len(i)>1]
 for line in open:
