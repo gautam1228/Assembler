@@ -30,27 +30,27 @@ register_dict = {
     "FLAGS": "111"
 }
 
-def error_e(line):
-    if int(line[2][1:]) > 127:
-        print("error E")
-def error_g():
-    if len(open[0]) != 2 or open[0][0] != 'var':
-        print("error G")
-# assem_code=open("assem_code.txt")
-# open=assem_code.read()
-# print(open)
+# def error_e(line):
+#     if int(line[2][1:]) > 127:
+#         print("error E")
+# def error_g():
+#     if len(open[0]) != 2 or open[0][0] != 'var':
+#         print("error G")
+# # assem_code=open("assem_code.txt")
+# # open=assem_code.read()
+# # print(open)
 
-def error_h_i():
-    flag = False
-    for i in range(len(open)):
-        if 'hlt' in open[i]:
-            flag = True
-            break
-    if flag == False:
-        print("error H")
-    elif i != len(open) - 1:
-        print("error I")
-error_h_i()
+# def error_h_i():
+#     flag = False
+#     for i in range(len(open)):
+#         if 'hlt' in open[i]:
+#             flag = True
+#             break
+#     if flag == False:
+#         print("error H")
+#     elif i != len(open) - 1:
+#         print("error I")
+# error_h_i()
 # opcode = str, Mem_address = str, Reg = R1 or R2 etc.
 def instr_A(opcode, R1, R2, R3):
     return opcode+"00"+ register_dict[R1]+ register_dict[R2]+ register_dict[R3]
@@ -77,6 +77,96 @@ def instr_F(opcode,):
     ans = str(opcode) + unused_bits
     return ans
 
+def is_valid_variable_name(name):
+    """Checks whether a given string could be a valid variable name in Python."""
+    if not name.isidentifier():
+        return False
+
+    # Check whether name is a Python keyword
+    if name in {'False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break',
+                'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally',
+                'for', 'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal',
+                'not', 'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield'}:
+        return False
+
+    return True
+
+
+def error_func_A(line): #add R1 R2 R3
+    Register_list=[line[1], line[2], line[3]]
+    for i in Register_list:
+        if i=="FLAGS":
+            return "Illegal use of FLAGS register"
+        if i not in register_dict:
+            return "Typos in instruction name or register name"
+    return 1
+    
+
+
+def error_func_B(line):
+    R1=line[1]
+    if R1=="FLAGS":
+        return "Illegal use of FLAGS register"
+    if R1 not in register_dict:
+        return "Typos in instruction name or register name"
+    Imm_value=line[2]
+    if Imm_value[0]!="$":
+        try:
+            imm_int=int(Imm_value[1:])
+        except ValueError:   
+            return "Illegal Immediate values (more than 7 bits)"
+        if imm_int<0 or imm_int>127:
+            return "Illegal Immediate values (more than 7 bits)"
+    return 1
+        
+
+def error_func_C(line):
+    R1=line[1]
+    R2=line[2]
+    if R1=="FLAGS":
+        return "Illegal use of FLAGS register"
+    if R1 not in register_dict:
+        return "Typos in instruction name or register name"
+    if R2 not in register_dict:
+        return "Typos in instruction name or register name"
+    return 1
+    
+
+def error_func_D(line):
+    R1=line[1]
+    if R1=="FLAGS":
+        return "Illegal use of FLAGS register"
+    if R1 not in register_dict:
+        return "Typos in instruction name or register name"
+    
+    mem_address=line[2]
+    if mem_address not in var_list:
+        if mem_address in label_list:
+            return "Misuse of labels as variables or vice-versa"
+        try:
+            mem_int=int(mem_address)
+        except ValueError:
+            if is_valid_variable_name(mem_address):
+                return "Variables not declared at the beginning"
+            else:
+                return "General Syntax Error"
+        
+
+
+def error_func_E(line):
+    mem_address=line[1]
+    if mem_address not in var_list:
+        if mem_address in label_list:
+            return "Misuse of labels as variables or vice-versa"
+        try:
+            mem_int=int(mem_address)
+        except ValueError:
+            if is_valid_variable_name(mem_address):
+                return "Variables not declared at the beginning"
+            else:
+                return "General Syntax Error"
+
+
 def check_mov_type(code):
     if "$" in code:
         return opcode_dict[code[0]][1][1], opcode_dict[code[0]][1][0]
@@ -98,21 +188,24 @@ for line in open:
             instr_type,opcode=check_mov_type(line)
             
         if instr_type =='A':
-            #call error function
+            error_func_A(line)
             bin_instr=instr_A(opcode, line[1], line[2], line[3])
             print(bin_instr)
         elif instr_type =='B':
             #first we'll call the err_func_B
+            error_func_B(line)
             #if no error is caught then:
             bin_instr=instr_B(opcode, line[1], line[2])
             print(bin_instr)
         elif instr_type =='C':
             #first we'll call the err_func_C
+            error_func_C(line)
             #if no error is caught then:
             bin_instr=instr_C(opcode, line[1], line[2])
             print(bin_instr)
         elif instr_type =='D':
             #first we'll call the err_func_D
+            error_func_D(line)
             #if no error is caught then:
             reg = line[1] # maybe useless but makes the function call a bit intuitive (I guess ?)
             mem_address = line[2]
@@ -121,6 +214,7 @@ for line in open:
             print(bin_instr)
         elif instr_type =='E':
             #first we'll call the err_func_E
+            error_func_E(line)
             #if no error is caught then:
             mem_address = line[1]
             bin_instr = instr_E(opcode, mem_address)
@@ -130,3 +224,7 @@ for line in open:
             #if no error is caught then:
             bin_instr = instr_F(opcode)
             print(bin_instr)
+    elif len(line)==0:
+        pass
+    else:
+        print("Typos in instruction name or register name")
