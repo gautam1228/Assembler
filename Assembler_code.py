@@ -89,7 +89,7 @@ def error_func_A(line): #add R1 R2 R3
                 return "Typos in instruction name or register name"
         return 1
     else:
-        return "General Syntax Error"
+        return "General Syntax Error1"
 
 
 def error_func_B(line):
@@ -109,9 +109,9 @@ def error_func_B(line):
                 return "Illegal Immediate values (more than 7 bits)"
             return 1
         else:
-            return "General Syntax Error"
+            return "General Syntax Error2"
     else:
-        return "General Syntax Error"
+        return "General Syntax Error3"
         
 
 def error_func_C(line, opcode):
@@ -125,7 +125,7 @@ def error_func_C(line, opcode):
         if R2 not in register_dict:
             return "Typos in instruction name or register name"
     else:
-        return "General Syntax Error"
+        return "General Syntax Error4"
     return 1
     
 
@@ -147,29 +147,29 @@ def error_func_D(line):
                 if is_valid_variable_name(mem_address):
                     return "Variables not declared at the beginning"
                 else:
-                    return "General Syntax Error"
+                    return "General Syntax Error5"
         return 1
     else:
-        return "General Syntax Error"
+        return "General Syntax Error6"
         
 
 def error_func_E(line):
-    if len(line)==1:
+    if len(line)==2:
         mem_address=line[1]
         if mem_address not in label_dict:
             if mem_address in var_dict:
                 return "Misuse of labels as variables or vice-versa"
-        else:
-            return "Use of Undefined Labels"
+            else:
+                return "Use of Undefined Labels"
         return 1
     else:
-        return "General Syntax Error"
+        return "General Syntax Error7"
         
 def error_func_F(line):
     if len(line)==1:
         return 1
     else:
-        "General Syntax Error"   
+        return "General Syntax Error8"   
 
 def check_mov_type(line):
     if "$" in "".join(line):
@@ -190,7 +190,7 @@ for line_no in range(len(open)):
         if line[0][-1] == ":":
             label_dict[line[0][:-1]]=line_no
         else:
-            print("General Syntax Error")
+            print("General Syntax Error9")
             quit()
     elif line[0] == "var":
         var_count+=1
@@ -223,46 +223,61 @@ for line_no in range(len(open)):
             instr_type,opcode=check_mov_type(line)
             
         if instr_type =='A':
-            print(error_func_A(line))
-            quit()
+            return_value= error_func_A(line)
+            if return_value!=1:
+                print(return_value)
+                quit()
+  
         elif instr_type =='B':
             #first we'll call the err_func_B
-            print(error_func_B(line))
-            quit()
+            return_value= error_func_B(line)
+            if return_value!=1:
+                print(return_value)
+                quit()
 
         elif instr_type =='C':
             #first we'll call the err_func_C
-            print(error_func_C(line, opcode))
-            quit()
+            return_value= error_func_C(line,opcode)
+            if return_value!=1:
+                print(return_value)
+                quit()
 
         elif instr_type =='D':
             #first we'll call the err_func_D
-            print(error_func_D(line))
-            quit()
+            return_value= error_func_D(line)
+            if return_value!=1:
+                print(return_value)
+                quit()
             
         elif instr_type =='E':
             #first we'll call the err_func_E
-            print(error_func_E(line))
-            quit()
-            
+            return_value= error_func_E(line)
+            if return_value!=1:
+                print(return_value)
+                quit()
+
         elif instr_type =='F':
             #first we'll call the err_func_F
             #if no error is caught then:
-            print(error_func_F(line))
-            quit()
+            return_value= error_func_F(line)
+            if return_value!=1:
+                print(return_value)
+                quit()
             
     elif line[0]=="var":
         if len(line)==2:
             try:
                 line[1]
             except Exception:
-                print("General Syntax Error")
+                print("General Syntax Error10")
                 quit()
             var_dict[line[1]] = line_no+(len(open)-var_count)
             if not is_valid_variable_name(line[1]):
-                print("General Syntax Error") 
+                print("General Syntax Error11") 
                 quit()
-        print("General Syntax Error")
+        else:
+            print("General Syntax Error12")
+            quit()
     else:
         print("Typos in instruction name or register name")
         quit()
@@ -308,5 +323,6 @@ for line_no in range(len(open)):
             print(bin_instr)
     elif line[0]=="var":
         pass
-    
+print(label_dict)
+print(var_dict)
 
