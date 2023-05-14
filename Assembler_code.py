@@ -191,12 +191,14 @@ for line_no in range(len(open)):
             label_dict[line[0][:-1]]=line_no
         else:
             print("General Syntax Error")
+            quit()
     elif line[0] == "var":
         var_count+=1
             
 #printing missing halt error
 if "hlt" not in open[-1]:
     print("Missing hlt error")
+    quit()
 
 # main for loop
 for line_no in range(len(open)):
@@ -211,6 +213,7 @@ for line_no in range(len(open)):
         
     if line == ['hlt'] and line_no != len(open) - 1:
         print("hlt not being used as the last instruction")   
+        quit()
     
     if len(line) and line[0] in opcode_dict:
         instr_type = opcode_dict[line[0]][1]
@@ -253,11 +256,14 @@ for line_no in range(len(open)):
             line[1]
         except Exception:
             print("General Syntax Error")
+            quit()
         var_dict[line[1]] = line_no+(len(open)-var_count)
         if not is_valid_variable_name(line[1]):
            print("General Syntax Error") 
+           quit()
     else:
         print("Typos in instruction name or register name")
+        quit()
         
 for line_no in range(len(open)):
 
