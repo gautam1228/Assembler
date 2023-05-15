@@ -194,6 +194,10 @@ for line_no in range(len(input_list)):
         splited_list=line[0].split("\t")
         line[0]=splited_list[0]
         line.insert(1, splited_list[1])
+        
+    while '' in line:
+        line.remove('')
+        
     if ":" in "".join(line):
         if line[0][-1] == ":":
             label_dict[line[0][:-1]]=line_no
@@ -208,19 +212,16 @@ for line_no in range(len(input_list)):
         hlt_Flag=True
     
             
-# printing writeing missing halt Instructions
-if not hlt_Flag:
-    output.write("Missing hlt instruction\n")
-    error_Flag=True
 
 # main for error loop
     
 for line_no in range(len(input_list)):
     line=input_list[line_no]
     
-    if line==['']:
-        continue
-    
+    while '' in line:
+        line.remove('')
+ 
+    print(line)
     if line[0]=='':
         line.pop(0)
         
@@ -304,12 +305,16 @@ for line_no in range(len(input_list)):
         output.write("Error in Line "+ str(line_no+1) + ": Invalid Operand\n")
         error_Flag=True
         
+# printing writeing missing halt Instructions
+if not hlt_Flag:
+    output.write("Error: No hlt instruction present\n")
+    error_Flag=True
+    
 #main loop for output        
 for line_no in range(len(input_list)):
     
     if error_Flag:
         break
-    
     line=input_list[line_no]
     
     if line==['']:
