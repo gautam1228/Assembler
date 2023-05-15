@@ -86,10 +86,10 @@ def error_func_A(line,line_no): #add R1 R2 R3
             if i=="FLAGS":
                 return "Error in Line"+ str(line_no+1) + ": Illegal use of FLAGS register"
             if i not in register_dict:
-                return "Error in Line"+ str(line_no+1) + ": Typos in instruction name1 or register name"
+                return "Error in Line"+ str(line_no+1) + ": Invalid Operand"
         return 1
     else:
-        return "Error in Line "+ str(line_no+1) + ": General Syntax Error1"
+        return "Error in Line "+ str(line_no+1) + f": {line[0]} must contain 3 parameters"
 
 
 def error_func_B(line,line_no):
@@ -98,7 +98,7 @@ def error_func_B(line,line_no):
         if R1=="FLAGS":
             return "Error in Line "+ str(line_no+1) + ": Illegal use of FLAGS register"
         if R1 not in register_dict:
-            return "Error in Line "+ str(line_no+1) + ": Typos in instruction name2 or register name"
+            return "Error in Line "+ str(line_no+1) + ": Invalid Operand"
         Imm_value=line[2]
         if Imm_value[0]=="$": #mov R1 $10 R3
             try:
@@ -111,7 +111,7 @@ def error_func_B(line,line_no):
         else:
             return "Error in Line "+ str(line_no+1) + ": General Syntax Error2"
     else:
-        return "Error in Line "+ str(line_no+1) + ": General Syntax Error3"
+        return "Error in Line "+ str(line_no+1) + f": {line[0]} must contain 2 parameters"
         
 
 def error_func_C(line, opcode, line_no):
@@ -121,11 +121,11 @@ def error_func_C(line, opcode, line_no):
         if R1=="FLAGS" and (R2=="FLAGS" and opcode!="00011"):
             return "Error in Line "+ str(line_no+1) + ": Illegal use of FLAGS register"
         if R1 not in register_dict:
-            return "Error in Line "+ str(line_no+1) + ": Typos in instruction name3 or register name"
+            return "Error in Line "+ str(line_no+1) + ": Invalid Operand"
         if R2 not in register_dict:
-            return "Error in Line "+ str(line_no+1) + ": Typos in instruction name4 or register name"
+            return "Error in Line "+ str(line_no+1) + ": Invalid Operand"
     else:
-        return "Error in Line "+ str(line_no+1) + ": General Syntax Error4"
+        return "Error in Line "+ str(line_no+1) + f": {line[0]} must contain 2 parameters"
     return 1
     
 
@@ -135,7 +135,7 @@ def error_func_D(line, line_no):
         if R1=="FLAGS":
             return "Error in Line "+ str(line_no+1) + ": Illegal use of FLAGS register"
         if R1 not in register_dict:
-            return "Error in Line "+ str(line_no+1) + ": Typos in instruction name5 or register name"
+            return "Error in Line "+ str(line_no+1) + ": Invalid Operand"
         
         mem_address=line[2]
         if mem_address not in var_dict:
@@ -145,12 +145,12 @@ def error_func_D(line, line_no):
                 mem_int=int(mem_address)
             except ValueError:
                 if is_valid_variable_name(mem_address):
-                    return "Error in Line "+ str(line_no+1) + ": Variables not declared at the beginning"
+                    return "Error in Line "+ str(line_no+1) + ": No variable name \""+mem_address+"\""
                 else:
                     return "Error in Line "+ str(line_no+1) + ": General Syntax Error5"
         return 1
     else:
-        return "Error in Line "+ str(line_no+1) + ": General Syntax Error6"
+        return "Error in Line "+ str(line_no+1) + f": {line[0]} must contain 2 parameters"
         
 
 def error_func_E(line, line_no):
@@ -163,13 +163,13 @@ def error_func_E(line, line_no):
                 return "Error in Line "+ str(line_no+1) + ": Use of Undefined Labels"
         return 1
     else:
-        return "Error in Line "+ str(line_no+1) + ": General Syntax Error7"
+        return "Error in Line "+ str(line_no+1) + f": {line[0]} must contain 1 parameter"
         
 def error_func_F(line,line_no):
     if len(line)==1:
         return 1
     else:
-        return "Error in Line "+ str(line_no+1) + ": General Syntax Error8"
+        return "Error in Line "+ str(line_no+1) + f": {line[0]} should not contain any parameter"
 
 def check_mov_type(line,line_no):
     if "$" in "".join(line):
@@ -301,7 +301,7 @@ for line_no in range(len(input_list)):
             output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error12\n")
             error_Flag=True
     else:
-        output.write("Error in Line "+ str(line_no+1) + ": Typos in instruction name or register name\n")
+        output.write("Error in Line "+ str(line_no+1) + ": Invalid Operand\n")
         error_Flag=True
         
 #main loop for output        
