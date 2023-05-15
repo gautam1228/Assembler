@@ -1,6 +1,4 @@
-Missing hlt instruction
-Error in Line 2: Invalid Operand
-Error in Line 3: add must contain 3 parameters
-Error in Line 5: add must contain 3 parameters
-Error in Line 6: add must contain 3 parameters
-Error in Line 7: add must contain 3 parameters
+Error in Line 5: No such memory address exists
+Error in Line 8: Variables must be declared at the very beginning
+Error in Line 15: No label named mylabel
+Error in Line 16: No label named mylabel

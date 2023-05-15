@@ -1,7 +1,7 @@
-var xyz
-agagag
-add
-add R0 R1 R2
-add R0 $100
-add R0 $ab1211
-add R0 xyz
+label: mov R1 $5
+mov R2 55
+add R1 R2 R1
+cmp R1 R2 R3
+sub R1 R1 R2
+je label1
+hlt
