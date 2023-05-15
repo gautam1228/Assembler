@@ -1,17 +1,15 @@
-var xyz
-sub	R0 R1 R2
-mov	R0 $100
-mov R5 FLAGS
-ld R5 myvar
-mul R6 R1 R1
-div	R1 R3
-var abc
-rs R1 $2
-xor	R0 R1 R2		
-mylabel2: or R0 R1 R1
-and R0 R1 R2
-not R5 R1
-cmp	R1 R6
-jmp mylabel
-jlt	mylabel
-hlt
+var a
+var b
+var c
+mov R1 $8
+mov R2 $9
+mov R3 $0
+mov R4 $6
+st R1 a
+st R2 b
+st R3 c
+cmp R2 R1
+jgt lab
+lab:	add R3 R2 R1
+    	jmp end
+end: hlt
