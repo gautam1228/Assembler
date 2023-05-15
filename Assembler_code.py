@@ -86,7 +86,7 @@ def error_func_A(line,line_no): #add R1 R2 R3
             if i=="FLAGS":
                 return "Illegal use of FLAGS register" +" in line " + str(line_no+1)
             if i not in register_dict:
-                return "Typos in instruction name or register name" +" in line " + str(line_no+1)
+                return "Typos in instruction name1 or register name" +" in line " + str(line_no+1)
         return 1
     else:
         return "General Syntax Error1"+" in line " + str(line_no+1)
@@ -98,7 +98,7 @@ def error_func_B(line,line_no):
         if R1=="FLAGS":
             return "Illegal use of FLAGS register" +" in line " + str(line_no+1)
         if R1 not in register_dict:
-            return "Typos in instruction name or register name" +" in line " + str(line_no+1)
+            return "Typos in instruction name2 or register name" +" in line " + str(line_no+1)
         Imm_value=line[2]
         if Imm_value[0]=="$": #mov R1 $10 R3
             try:
@@ -121,9 +121,9 @@ def error_func_C(line, opcode, line_no):
         if R1=="FLAGS" and (R2=="FLAGS" and opcode!="00011"):
             return "Illegal use of FLAGS register" +" in line " + str(line_no+1)
         if R1 not in register_dict:
-            return "Typos in instruction name or register name" +" in line " + str(line_no+1)
+            return "Typos in instruction name3 or register name" +" in line " + str(line_no+1)
         if R2 not in register_dict:
-            return "Typos in instruction name or register name" +" in line " + str(line_no+1)
+            return "Typos in instruction name4 or register name" +" in line " + str(line_no+1)
     else:
         return "General Syntax Error4" +"in line " + str(line_no+1)
     return 1
@@ -135,7 +135,7 @@ def error_func_D(line, line_no):
         if R1=="FLAGS":
             return "Illegal use of FLAGS register" +" error in line " + str(line_no+1)
         if R1 not in register_dict:
-            return "Typos in instruction name or register name" +" error in line " + str(line_no+1)
+            return "Typos in instruction name5 or register name" +" error in line " + str(line_no+1)
         
         mem_address=line[2]
         if mem_address not in var_dict:
@@ -216,10 +216,13 @@ for line_no in range(len(open)):
     if line[0]=='':
         line.pop(0)
         
+    if line[-1]=='':
+        line.pop(-1)
+        
     
     if line[0][-1]==":" and len(line[0])>1: #remove label prefix
         line.pop(0)
-        
+          
     if line == ['hlt'] and line_no != len(open) - 1:
         print("hlt not being used as the last instruction"+" Error in line " + str(line_no+1))   
         quit()
@@ -229,7 +232,7 @@ for line_no in range(len(open)):
         opcode = opcode_dict[line[0]][0]
         
         if line[0]=="mov":
-            instr_type,opcode=check_mov_type(line)
+            instr_type,opcode=check_mov_type(line,line_no)
             
         if instr_type =='A':
             return_value= error_func_A(line, line_no)
@@ -306,7 +309,7 @@ for line_no in range(len(open)):
         opcode = opcode_dict[line[0]][0]
         
         if line[0]=="mov":
-            instr_type,opcode=check_mov_type(line)
+            instr_type,opcode=check_mov_type(line, line_no)
         
         if instr_type =='A':
             bin_instr=instr_A(opcode, line[1], line[2], line[3])
