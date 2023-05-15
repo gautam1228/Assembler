@@ -181,37 +181,35 @@ def check_mov_type(line,line_no):
 # "D" for load/store, "E" for jump, and "F" for halt.
 
 assem_code=open("Assembler/assem_code.txt")
-input_list=[i.strip("\n").split(' ') for i in assem_code] 
+open=[i.strip("\n").split(' ') for i in assem_code] 
 
-output= open('example.txt', 'w')
-output.write('Hello, world!\n')
 
 hlt_Flag=False
 #for loop for label list
-for line_no in range(len(input_list)):
-    line=input_list[line_no]
+for line_no in range(len(open)):
+    line=open[line_no]
     if ":" in "".join(line):
         if line[0][-1] == ":":
             label_dict[line[0][:-1]]=line_no
             if line[1]=="hlt":
                 hlt_Flag=True
         else:
-            output.write("General Syntax Error9"+" in line " + str(line_no+1)) 
+            print("General Syntax Error9"+" in line " + str(line_no+1)) 
             quit()
     elif line[0] == "var":
         var_count+=1
     elif line[0] =="hlt":
         hlt_Flag=True
             
-#output.writeing missing halt Instructions
+#printing missing halt Instructions
 if not hlt_Flag:
-    output.write("Missing hlt instruction")
+    print("Missing hlt instruction")
     quit()
 
 # main for loop
-for line_no in range(len(input_list)):
+for line_no in range(len(open)):
 
-    line=input_list[line_no]
+    line=open[line_no]
     
     if line==['']:
         continue
@@ -226,8 +224,8 @@ for line_no in range(len(input_list)):
     if line[0][-1]==":" and len(line[0])>1: #remove label prefix
         line.pop(0)
           
-    if line == ['hlt'] and line_no != len(input_list) - 1:
-        output.write("hlt not being used as the last instruction"+" Error in line " + str(line_no+1))   
+    if line == ['hlt'] and line_no != len(open) - 1:
+        print("hlt not being used as the last instruction"+" Error in line " + str(line_no+1))   
         quit()
     
     if len(line) and line[0] in opcode_dict:
@@ -240,35 +238,35 @@ for line_no in range(len(input_list)):
         if instr_type =='A':
             return_value= error_func_A(line, line_no)
             if return_value!=1:
-                output.write(return_value)
+                print(return_value)
                 quit()
   
         elif instr_type =='B':
             #first we'll call the err_func_B
             return_value= error_func_B(line, line_no)
             if return_value!=1:
-                output.write(return_value)
+                print(return_value)
                 quit()
 
         elif instr_type =='C':
             #first we'll call the err_func_C
             return_value= error_func_C(line,opcode, line_no)
             if return_value!=1:
-                output.write(return_value)
+                print(return_value)
                 quit()
 
         elif instr_type =='D':
             #first we'll call the err_func_D
             return_value= error_func_D(line, line_no)
             if return_value!=1:
-                output.write(return_value)
+                print(return_value)
                 quit()
             
         elif instr_type =='E':
             #first we'll call the err_func_E
             return_value= error_func_E(line, line_no)
             if return_value!=1:
-                output.write(return_value)
+                print(return_value)
                 quit()
 
         elif instr_type =='F':
@@ -276,7 +274,7 @@ for line_no in range(len(input_list)):
             #if no error is caught then:
             return_value= error_func_F(line, line_no)
             if return_value!=1:
-                output.write(return_value)
+                print(return_value)
                 quit()
             
     elif line[0]=="var":
@@ -284,22 +282,22 @@ for line_no in range(len(input_list)):
             try:
                 line[1]
             except Exception:
-                output.write("General Syntax Error10"+" in line " + str(line_no+1))
+                print("General Syntax Error10"+" in line " + str(line_no+1))
                 quit()
-            var_dict[line[1]] = line_no+(len(input_list)-var_count)
+            var_dict[line[1]] = line_no+(len(open)-var_count)
             if not is_valid_variable_name(line[1]):
-                output.write("General Syntax Error11"+" in line " + str(line_no+1)) 
+                print("General Syntax Error11"+" in line " + str(line_no+1)) 
                 quit()
         else:
-            output.write("General Syntax Error12"+" in line " + str(line_no+1))
+            print("General Syntax Error12"+" in line " + str(line_no+1))
             quit()
     else:
-        output.write("Typos in instruction name or register name"+" Error in line " + str(line_no+1))
+        print("Typos in instruction name or register name"+" Error in line " + str(line_no+1))
         quit()
         
-for line_no in range(len(input_list)):
+for line_no in range(len(open)):
 
-    line=input_list[line_no]
+    line=open[line_no]
     
     if line==['']:
         continue
@@ -316,26 +314,28 @@ for line_no in range(len(input_list)):
         
         if instr_type =='A':
             bin_instr=instr_A(opcode, line[1], line[2], line[3])
-            output.write(bin_instr)
+            print(bin_instr)
         elif instr_type =='B':
             bin_instr=instr_B(opcode, line[1], line[2])
-            output.write(bin_instr)
+            print(bin_instr)
         elif instr_type =='C':
             bin_instr=instr_C(opcode, line[1], line[2])
-            output.write(bin_instr)
+            print(bin_instr)
         elif instr_type =='D':
             reg = line[1] # maybe useless but makes the function call a bit intuitive (I guess ?)
             mem_address = line[2]
             # bin_instr is the line that we'll write to the output file
             bin_instr = instr_D(opcode, reg, mem_address)
-            output.write(bin_instr)
+            print(bin_instr)
         elif instr_type =='E':
             mem_address = line[1]
             bin_instr = instr_E(opcode, mem_address)
-            output.write(bin_instr)
+            print(bin_instr)
         elif instr_type =='F':
             bin_instr = instr_F(opcode)
-            output.write(bin_instr)
+            print(bin_instr)
     elif line[0]=="var":
         pass
+print(label_dict)
+print(var_dict)
 
