@@ -195,7 +195,6 @@ for line_no in range(len(input_list)):
         line[0]=splited_list[0]
         line.insert(1, splited_list[1])
     if ":" in "".join(line):
-        print(line)
         if line[0][-1] == ":":
             label_dict[line[0][:-1]]=line_no
             if line[1]=="hlt":
@@ -215,8 +214,6 @@ if not hlt_Flag:
     error_Flag=True
 
 # main for error loop
-print(input_list)
-
     
 for line_no in range(len(input_list)):
     line=input_list[line_no]
@@ -224,7 +221,6 @@ for line_no in range(len(input_list)):
     if line==['']:
         continue
     
-    print(line)
     if line[0]=='':
         line.pop(0)
         
