@@ -1,3 +1,0 @@
-Error in Line 2: "55" is not defined
-Error in Line 4: cmp must contain 2 parameters
-Error in Line 6: No label named "label1"
