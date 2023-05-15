@@ -160,7 +160,7 @@ def error_func_E(line, line_no):
             if mem_address in var_dict:
                 return "Error in Line "+ str(line_no+1) + ": Misuse of labels as variables or vice-versa"
             else:
-                return "Error in Line "+ str(line_no+1) + ": Use of Undefined Labels"
+                return "Error in Line "+ str(line_no+1) + f": No label named {line[1]}"
         return 1
     else:
         return "Error in Line "+ str(line_no+1) + f": {line[0]} must contain 1 parameter"
