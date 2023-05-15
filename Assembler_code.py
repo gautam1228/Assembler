@@ -181,9 +181,9 @@ def check_mov_type(line,line_no):
 # "D" for load/store, "E" for jump, and "F" for halt.
 
 assem_code=open("Assembler/assem_code.txt")
-input_list=[i.strip("\n").split(' ') for i in assem_code] 
+input_list=[i.strip().split() for i in assem_code] 
 
-output= open('binary_output.txt', 'w')
+output= open("Assembler/binary_output.txt", 'w')
 
 hlt_Flag=False
 
@@ -196,8 +196,7 @@ for line_no in range(len(input_list)):
             if line[1]=="hlt":
                 hlt_Flag=True
         else:
-            output.write("General Syntax Error9"+" in line " + str(line_no+1)) 
-            quit()
+            output.write("General Syntax Error9"+" in line " + str(line_no+1))
     elif line[0] == "var":
         var_count+=1
     elif line[0] =="hlt":
