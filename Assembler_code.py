@@ -121,9 +121,9 @@ def error_func_C(line, opcode, line_no):
         if R1=="FLAGS" and (R2=="FLAGS" and opcode!="00011"):
             return "Error in Line "+ str(line_no+1) + ": Illegal use of FLAGS register"
         if R1 not in register_dict:
-            return "Error in Line "+ str(line_no+1) + ": Invalid Register Operand"
+            return "Error in Line "+ str(line_no+1) + f": \"{R1}\" is not defined"
         if R2 not in register_dict:
-            return "Error in Line "+ str(line_no+1) + ": Invalid Register Operand"
+            return "Error in Line "+ str(line_no+1) + f": \"{R2}\" is not defined"
     else:
         return "Error in Line "+ str(line_no+1) + f": {line[0]} must contain 2 parameters"
     return 1
