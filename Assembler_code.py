@@ -220,6 +220,8 @@ for line_no in range(len(input_list)):
     
     while '' in line:
         line.remove('')
+ 
+    print(line)
     if line[0]=='':
         line.pop(0)
         
