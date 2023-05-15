@@ -1,1 +1,1 @@
-print
+Typos in instruction name or
