@@ -305,7 +305,7 @@ for line_no in range(len(input_list)):
         output.write("Error in Line "+ str(line_no+1) + ": Invalid Operand\n")
         error_Flag=True
         
-# printing writeing missing halt Instructions
+# printing writing missing halt Instructions
 if not hlt_Flag:
     output.write("Error: No hlt instruction present\n")
     error_Flag=True
