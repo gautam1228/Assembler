@@ -121,9 +121,9 @@ def error_func_C(line, opcode, line_no):
         if R1=="FLAGS" and (R2=="FLAGS" and opcode!="00011"):
             return "Error in Line "+ str(line_no+1) + ": Illegal use of FLAGS register"
         if R1 not in register_dict:
-            return "Error in Line "+ str(line_no+1) + ": Invalid Operand"
+            return "Error in Line "+ str(line_no+1) + ": Invalid Register Operand"
         if R2 not in register_dict:
-            return "Error in Line "+ str(line_no+1) + ": Invalid Operand"
+            return "Error in Line "+ str(line_no+1) + ": Invalid Register Operand"
     else:
         return "Error in Line "+ str(line_no+1) + f": {line[0]} must contain 2 parameters"
     return 1
@@ -171,7 +171,7 @@ def error_func_F(line,line_no):
     else:
         return "Error in Line "+ str(line_no+1) + f": {line[0]} should not contain any parameter"
 
-def check_mov_type(line,line_no):
+def check_mov_type(line):
     if "$" in "".join(line):
         return opcode_dict[line[0]][0][1], opcode_dict[line[0]][0][0]
     else:
@@ -232,7 +232,7 @@ for line_no in range(len(input_list)):
         line.pop(0)
     
     if line == ['hlt'] and line_no != len(input_list) - 1:
-        output.write("Error in Line "+ str(line_no+1+1) + ": hlt not being used as the last instructionn\n")   
+        output.write("Error in Line "+ str(line_no+1+1) + ": Can't execute lines after hlt\n")   
         error_Flag=True
         
     if len(line) and line[0] in opcode_dict:
@@ -240,7 +240,7 @@ for line_no in range(len(input_list)):
         opcode = opcode_dict[line[0]][0]
         
         if line[0]=="mov":
-            instr_type,opcode=check_mov_type(line,line_no)
+            instr_type,opcode=check_mov_type(line)
             
         if instr_type =='A':
             return_value= error_func_A(line, line_no)
