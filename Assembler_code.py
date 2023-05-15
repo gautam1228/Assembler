@@ -346,7 +346,7 @@ for line_no in range(len(input_list)):
             output.write(bin_instr+"\n")
         elif instr_type =='F':
             bin_instr = instr_F(opcode)
-            output.write(bin_instr+"\n")
+            output.write(bin_instr)
     elif line[0]=="var":
         pass
 
