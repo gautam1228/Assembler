@@ -339,3 +339,5 @@ for line_no in range(len(input_list)):
     elif line[0]=="var":
         pass
 
+assem_code.close()
+output.close()
