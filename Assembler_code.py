@@ -84,34 +84,34 @@ def error_func_A(line,line_no): #add R1 R2 R3
         Register_list=[line[1], line[2], line[3]] 
         for i in Register_list:
             if i=="FLAGS":
-                return "Illegal use of FLAGS register" +" in line " + str(line_no+1)
+                return "Error in Line"+ str(line_no+1) + ": Illegal use of FLAGS register"
             if i not in register_dict:
-                return "Typos in instruction name1 or register name" +" in line " + str(line_no+1)
+                return "Error in Line"+ str(line_no+1) + ": Typos in instruction name1 or register name"
         return 1
     else:
-        return "General Syntax Error1"+" in line " + str(line_no+1)
+        return "Error in Line "+ str(line_no+1) + ": General Syntax Error1"
 
 
 def error_func_B(line,line_no):
     if len(line)==3:
         R1=line[1]
         if R1=="FLAGS":
-            return "Illegal use of FLAGS register" +" in line " + str(line_no+1)
+            return "Error in Line "+ str(line_no+1) + ": Illegal use of FLAGS register"
         if R1 not in register_dict:
-            return "Typos in instruction name2 or register name" +" in line " + str(line_no+1)
+            return "Error in Line "+ str(line_no+1) + ": Typos in instruction name2 or register name"
         Imm_value=line[2]
         if Imm_value[0]=="$": #mov R1 $10 R3
             try:
                 imm_int=int(Imm_value[1:])
             except ValueError:   
-                return "Illegal Immediate values (more than 7 bits)" +" in line " + str(line_no+1)
+                return "Error in Line "+ str(line_no+1) + ": Illegal Immediate values (more than 7 bits)"
             if imm_int<0 or imm_int>127:
-                return "Illegal Immediate values (more than 7 bits)" +" in line " + str(line_no+1)
+                return "Error in Line "+ str(line_no+1) + ": Illegal Immediate values (more than 7 bits)"
             return 1
         else:
-            return "General Syntax Error2" +"in line " + str(line_no+1)
+            return "Error in Line "+ str(line_no+1) + ": General Syntax Error2"
     else:
-        return "General Syntax Error3" +"in line " + str(line_no+1)
+        return "Error in Line "+ str(line_no+1) + ": General Syntax Error3"
         
 
 def error_func_C(line, opcode, line_no):
@@ -119,13 +119,13 @@ def error_func_C(line, opcode, line_no):
         R1=line[1]
         R2=line[2]
         if R1=="FLAGS" and (R2=="FLAGS" and opcode!="00011"):
-            return "Illegal use of FLAGS register" +" in line " + str(line_no+1)
+            return "Error in Line "+ str(line_no+1) + ": Illegal use of FLAGS register"
         if R1 not in register_dict:
-            return "Typos in instruction name3 or register name" +" in line " + str(line_no+1)
+            return "Error in Line "+ str(line_no+1) + ": Typos in instruction name3 or register name"
         if R2 not in register_dict:
-            return "Typos in instruction name4 or register name" +" in line " + str(line_no+1)
+            return "Error in Line "+ str(line_no+1) + ": Typos in instruction name4 or register name"
     else:
-        return "General Syntax Error4" +"in line " + str(line_no+1)
+        return "Error in Line "+ str(line_no+1) + ": General Syntax Error4"
     return 1
     
 
@@ -133,24 +133,24 @@ def error_func_D(line, line_no):
     if len(line)==3:   
         R1=line[1]
         if R1=="FLAGS":
-            return "Illegal use of FLAGS register" +" error in line " + str(line_no+1)
+            return "Error in Line "+ str(line_no+1) + ": Illegal use of FLAGS register"
         if R1 not in register_dict:
-            return "Typos in instruction name5 or register name" +" error in line " + str(line_no+1)
+            return "Error in Line "+ str(line_no+1) + ": Typos in instruction name5 or register name"
         
         mem_address=line[2]
         if mem_address not in var_dict:
             if mem_address in label_dict:
-                return "Misuse of labels as variables or vice-versa"+" error in line " + str(line_no+1)
+                return "Error in Line "+ str(line_no+1) + ": Misuse of labels as variables or vice-versa"
             try:
                 mem_int=int(mem_address)
             except ValueError:
                 if is_valid_variable_name(mem_address):
-                    return "Variables not declared at the beginning"+" error in line " + str(line_no+1)
+                    return "Error in Line "+ str(line_no+1) + ": Variables not declared at the beginning"
                 else:
-                    return "General Syntax Error5"+" in line " + str(line_no+1)
+                    return "Error in Line "+ str(line_no+1) + ": General Syntax Error5"
         return 1
     else:
-        return "General Syntax Error6"+" in line " + str(line_no+1)
+        return "Error in Line "+ str(line_no+1) + ": General Syntax Error6"
         
 
 def error_func_E(line, line_no):
@@ -158,18 +158,18 @@ def error_func_E(line, line_no):
         mem_address=line[1]
         if mem_address not in label_dict:
             if mem_address in var_dict:
-                return "Misuse of labels as variables or vice-versa"+" in line " + str(line_no+1)
+                return "Error in Line "+ str(line_no+1) + ": Misuse of labels as variables or vice-versa"
             else:
-                return "Use of Undefined Labels"+" Error in line " + str(line_no+1)
+                return "Error in Line "+ str(line_no+1) + ": Use of Undefined Labels"
         return 1
     else:
-        return "General Syntax Error7"+" in line " + str(line_no+1)
+        return "Error in Line "+ str(line_no+1) + ": General Syntax Error7"
         
 def error_func_F(line,line_no):
     if len(line)==1:
         return 1
     else:
-        return "General Syntax Error8"+" in line " + str(line_no+1)
+        return "Error in Line "+ str(line_no+1) + ": General Syntax Error8"
 
 def check_mov_type(line,line_no):
     if "$" in "".join(line):
@@ -196,7 +196,7 @@ for line_no in range(len(input_list)):
             if line[1]=="hlt":
                 hlt_Flag=True
         else:
-            output.write("General Syntax Error9"+" in line " + str(line_no+1))
+            output.write("Error in Line "+ str(line_no+1) + "General Syntax Error9\n")
     elif line[0] == "var":
         var_count+=1
     elif line[0] =="hlt":
@@ -226,8 +226,7 @@ for line_no in range(len(input_list)):
         line.pop(0)
           
     if line == ['hlt'] and line_no != len(input_list) - 1:
-        output.write("hlt not being used as the last instruction"+" Error in line " + str(line_no+1))   
-        quit()
+        output.write("Error in Line "+ str(line_no+1) + ": hlt not being used as the last instructionn\n")   
     
     if len(line) and line[0] in opcode_dict:
         instr_type = opcode_dict[line[0]][1]
@@ -283,18 +282,14 @@ for line_no in range(len(input_list)):
             try:
                 line[1]
             except Exception:
-                output.write("General Syntax Error10"+" in line " + str(line_no+1))
-                quit()
+                output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error10\n")
             var_dict[line[1]] = line_no+(len(input_list)-var_count)
             if not is_valid_variable_name(line[1]):
-                output.write("General Syntax Error11"+" in line " + str(line_no+1)) 
-                quit()
+                output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error11\n")
         else:
-            output.write("General Syntax Error12"+" in line " + str(line_no+1))
-            quit()
+            output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error12\n")
     else:
-        output.write("Typos in instruction name or register name"+" Error in line " + str(line_no+1))
-        quit()
+        output.write("Error in Line "+ str(line_no+1) + ": Typos in instruction name or register name")
         
 for line_no in range(len(input_list)):
 
