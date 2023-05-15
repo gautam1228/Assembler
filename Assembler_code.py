@@ -109,7 +109,7 @@ def error_func_B(line,line_no):
                 return "Error in Line "+ str(line_no+1) + ": Illegal Immediate values (more than 7 bits)"
             return 1
         else:
-            return "Error in Line "+ str(line_no+1) + ": General Syntax Error2"
+            return "Error in Line "+ str(line_no+1) + ": General Syntax Error"
     else:
         return "Error in Line "+ str(line_no+1) + f": {line[0]} must contain 2 parameters"
         
@@ -147,7 +147,7 @@ def error_func_D(line, line_no):
                 if is_valid_variable_name(mem_address):
                     return "Error in Line "+ str(line_no+1) + ": No variable name \""+mem_address+"\""
                 else:
-                    return "Error in Line "+ str(line_no+1) + ": General Syntax Error5"
+                    return "Error in Line "+ str(line_no+1) + ": General Syntax Error"
         return 1
     else:
         return "Error in Line "+ str(line_no+1) + f": {line[0]} must contain 2 parameters"
@@ -204,7 +204,7 @@ for line_no in range(len(input_list)):
             if line[1]=="hlt":
                 hlt_Flag=True
         else:
-            output.write("Error in Line "+ str(line_no+1) + "General Syntax Error9\n")
+            output.write("Error in Line "+ str(line_no+1) + "General Syntax Error\n")
             error_Flag=True
     elif line[0] == "var":
         var_count+=1
@@ -292,14 +292,14 @@ for line_no in range(len(input_list)):
             try:
                 line[1]
             except Exception:
-                output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error10\n")
+                output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error\n")
                 error_Flag=True
             var_dict[line[1]] = line_no+(len(input_list)-var_count)
             if not is_valid_variable_name(line[1]):
-                output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error11\n")
+                output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error\n")
                 error_Flag=True
         else:
-            output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error12\n")
+            output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error\n")
             error_Flag=True
     else:
         output.write("Error in Line "+ str(line_no+1) + ": Invalid Operand\n")
