@@ -1,1 +1,0 @@
-Typos in instruction name or
