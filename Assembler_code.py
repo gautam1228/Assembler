@@ -181,15 +181,19 @@ def check_mov_type(line,line_no):
 # "D" for load/store, "E" for jump, and "F" for halt.
 
 assem_code=open("Assembler/assem_code.txt")
-input_list=[i.strip().split() for i in assem_code] 
+input_list=[i.strip().split(' ') for i in assem_code] 
 
 output= open("Assembler/binary_output.txt", 'w')
 
 hlt_Flag=False
-
+error_Flag=False
 #for loop for label list
 for line_no in range(len(input_list)):
     line=input_list[line_no]
+    if "\t" in line[0]:
+        splited_list=line[0].split("\t")
+        line[0]=splited_list[0]
+        line.insert(1, splited_list[1])
     if ":" in "".join(line):
         if line[0][-1] == ":":
             label_dict[line[0][:-1]]=line_no
@@ -197,19 +201,21 @@ for line_no in range(len(input_list)):
                 hlt_Flag=True
         else:
             output.write("Error in Line "+ str(line_no+1) + "General Syntax Error9\n")
+            error_Flag=True
     elif line[0] == "var":
         var_count+=1
     elif line[0] =="hlt":
         hlt_Flag=True
+    
             
 # printing writeing missing halt Instructions
 if not hlt_Flag:
-    output.write("Missing hlt instruction")
-    quit()
+    output.write("Missing hlt instruction\n")
+    error_Flag=True
 
-# main for loop
+# main for error loop
+    
 for line_no in range(len(input_list)):
-
     line=input_list[line_no]
     
     if line==['']:
@@ -220,14 +226,15 @@ for line_no in range(len(input_list)):
         
     if line[-1]=='':
         line.pop(-1)
-        
+    
     
     if line[0][-1]==":" and len(line[0])>1: #remove label prefix
         line.pop(0)
-          
-    if line == ['hlt'] and line_no != len(input_list) - 1:
-        output.write("Error in Line "+ str(line_no+1) + ": hlt not being used as the last instructionn\n")   
     
+    if line == ['hlt'] and line_no != len(input_list) - 1:
+        output.write("Error in Line "+ str(line_no+1+1) + ": hlt not being used as the last instructionn\n")   
+        error_Flag=True
+        
     if len(line) and line[0] in opcode_dict:
         instr_type = opcode_dict[line[0]][1]
         opcode = opcode_dict[line[0]][0]
@@ -238,61 +245,71 @@ for line_no in range(len(input_list)):
         if instr_type =='A':
             return_value= error_func_A(line, line_no)
             if return_value!=1:
-                output.write(return_value)
-                quit()
+                output.write(return_value+"\n")
+                error_Flag=True
   
         elif instr_type =='B':
             #first we'll call the err_func_B
             return_value= error_func_B(line, line_no)
             if return_value!=1:
-                output.write(return_value)
-                quit()
+                output.write(return_value+"\n")
+                error_Flag=True 
 
         elif instr_type =='C':
             #first we'll call the err_func_C
             return_value= error_func_C(line,opcode, line_no)
             if return_value!=1:
-                output.write(return_value)
-                quit()
+                output.write(return_value+"\n")
+                error_Flag=True 
 
         elif instr_type =='D':
             #first we'll call the err_func_D
             return_value= error_func_D(line, line_no)
             if return_value!=1:
-                output.write(return_value)
-                quit()
+                output.write(return_value+"\n")
+                error_Flag=True 
             
         elif instr_type =='E':
             #first we'll call the err_func_E
             return_value= error_func_E(line, line_no)
             if return_value!=1:
-                output.write(return_value)
-                quit()
+                output.write(return_value+"\n")
+                error_Flag=True 
 
         elif instr_type =='F':
             #first we'll call the err_func_F
             #if no error is caught then:
             return_value= error_func_F(line, line_no)
             if return_value!=1:
-                output.write(return_value)
-                quit()
+                output.write(return_value+"\n")
+                error_Flag=True 
             
     elif line[0]=="var":
+        if line_no>var_count:
+            output.write("Error in Line "+ str(line_no+1)+": Variables must be declared at the very beginning\n")
         if len(line)==2:
             try:
                 line[1]
             except Exception:
                 output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error10\n")
+                error_Flag=True
             var_dict[line[1]] = line_no+(len(input_list)-var_count)
             if not is_valid_variable_name(line[1]):
                 output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error11\n")
+                error_Flag=True
         else:
             output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error12\n")
+            error_Flag=True
     else:
-        output.write("Error in Line "+ str(line_no+1) + ": Typos in instruction name or register name")
+        output.write("Error in Line "+ str(line_no+1) + ": Typos in instruction name or register name\n")
+        error_Flag=True
         
+#main loop for output        
 for line_no in range(len(input_list)):
-
+    
+    if error_Flag:
+        break
+    
     line=input_list[line_no]
     
     if line==['']:
