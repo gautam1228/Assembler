@@ -183,8 +183,7 @@ def check_mov_type(line,line_no):
 assem_code=open("Assembler/assem_code.txt")
 input_list=[i.strip("\n").split(' ') for i in assem_code] 
 
-output= open('example.txt', 'w')
-output.write('Hello, world!\n')
+output= open('binary_output.txt', 'w')
 
 hlt_Flag=False
 #for loop for label list
@@ -203,7 +202,7 @@ for line_no in range(len(input_list)):
     elif line[0] =="hlt":
         hlt_Flag=True
             
-#output.writeing missing halt Instructions
+# printing writeing missing halt Instructions
 if not hlt_Flag:
     output.write("Missing hlt instruction")
     quit()
@@ -316,26 +315,26 @@ for line_no in range(len(input_list)):
         
         if instr_type =='A':
             bin_instr=instr_A(opcode, line[1], line[2], line[3])
-            output.write(bin_instr)
+            output.write(bin_instr+"\n")
         elif instr_type =='B':
             bin_instr=instr_B(opcode, line[1], line[2])
-            output.write(bin_instr)
+            output.write(bin_instr+"\n")
         elif instr_type =='C':
             bin_instr=instr_C(opcode, line[1], line[2])
-            output.write(bin_instr)
+            output.write(bin_instr+"\n")
         elif instr_type =='D':
             reg = line[1] # maybe useless but makes the function call a bit intuitive (I guess ?)
             mem_address = line[2]
             # bin_instr is the line that we'll write to the output file
             bin_instr = instr_D(opcode, reg, mem_address)
-            output.write(bin_instr)
+            output.write(bin_instr+"\n")
         elif instr_type =='E':
             mem_address = line[1]
             bin_instr = instr_E(opcode, mem_address)
-            output.write(bin_instr)
+            output.write(bin_instr+"\n")
         elif instr_type =='F':
             bin_instr = instr_F(opcode)
-            output.write(bin_instr)
+            output.write(bin_instr+"\n")
     elif line[0]=="var":
         pass
 
