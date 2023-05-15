@@ -74,7 +74,7 @@ Feel free to modify and distribute it as needed.
 
 ## Credits
 
-This assembler program was developed by Aditya Aggardwal, Gautam Singh, Kunal Sharma, Mehul Pahuja.
+This assembler program was developed by Aditya Aggarwal, Gautam Singh, Kunal Sharma, Mehul Pahuja.
 
 ## Feedback and Contributions
 
