@@ -186,6 +186,7 @@ input_list=[i.strip("\n").split(' ') for i in assem_code]
 output= open('binary_output.txt', 'w')
 
 hlt_Flag=False
+
 #for loop for label list
 for line_no in range(len(input_list)):
     line=input_list[line_no]
