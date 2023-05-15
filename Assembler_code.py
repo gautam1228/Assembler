@@ -44,7 +44,7 @@ def instr_B(opcode, R1, Imm_value):
 def instr_C(opcode, R1, R2):
     return opcode + "0"*5 + register_dict[R1] + register_dict[R2]
 
-def instr_D(opcode, Reg, Mem_address):
+def instr_D(opcode, Reg, mem_address):
     r1_ret = register_dict[Reg]
     unused_bits = "0"
     if mem_address in var_dict:
