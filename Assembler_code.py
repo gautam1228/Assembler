@@ -323,7 +323,7 @@ for line_no in range(len(input_list)):
         opcode = opcode_dict[line[0]][0]
         
         if line[0]=="mov":
-            instr_type,opcode=check_mov_type(line, line_no)
+            instr_type,opcode=check_mov_type(line)
         
         if instr_type =='A':
             bin_instr=instr_A(opcode, line[1], line[2], line[3])
