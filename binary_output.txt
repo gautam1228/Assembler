@@ -1,4 +1,4 @@
-Error in Line 5: Variables not declared at the beginning
+Error in Line 5: No such memory address exists
 Error in Line 8: Variables must be declared at the very beginning
-Error in Line 15: Use of Undefined Labels
-Error in Line 16: Use of Undefined Labels
+Error in Line 15: No label named mylabel
+Error in Line 16: No label named mylabel

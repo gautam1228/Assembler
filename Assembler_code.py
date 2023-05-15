@@ -145,7 +145,7 @@ def error_func_D(line, line_no):
                 mem_int=int(mem_address)
             except ValueError:
                 if is_valid_variable_name(mem_address):
-                    return "Error in Line "+ str(line_no+1) + ": Variables not declared at the beginning"
+                    return "Error in Line "+ str(line_no+1) + ": No such memory address exists"
                 else:
                     return "Error in Line "+ str(line_no+1) + ": General Syntax Error5"
         return 1
@@ -160,7 +160,7 @@ def error_func_E(line, line_no):
             if mem_address in var_dict:
                 return "Error in Line "+ str(line_no+1) + ": Misuse of labels as variables or vice-versa"
             else:
-                return "Error in Line "+ str(line_no+1) + ": Use of Undefined Labels"
+                return "Error in Line "+ str(line_no+1) + f": No label named {line[1]}"
         return 1
     else:
         return "Error in Line "+ str(line_no+1) + ": General Syntax Error7"
