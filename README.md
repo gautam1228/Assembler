@@ -4,7 +4,7 @@ This is a simple assembler program that converts assembly code into binary machi
 
 ## Usage
 
-1. Create an assembly code file: Create a text file with the assembly instructions you want to convert into binary code. Each instruction should be on a separate line.
+1. Create an assembly code file ("assem_code.txt" as provided in the repo): Create a text file with the assembly instructions you want to convert into binary code. Each instruction should be on a separate line.
 
 2. Define variables (optional): If your assembly code uses variables, you can declare them using the `var` keyword followed by the variable name. Variables should be declared at the beginning of the code.
 
@@ -14,7 +14,7 @@ This is a simple assembler program that converts assembly code into binary machi
 
 5. Run the assembler: Execute the assembler program, providing the path to the assembly code file as input.
 
-6. Check the output: The assembler will generate a binary output file containing the converted machine code. Each line of the output file represents a binary instruction.
+6. Check the output: The assembler will generate a "binary_output.txt" file containing the converted machine code. Each line of the output file represents a binary instruction.
 
 ## Instruction Format
 
@@ -26,7 +26,9 @@ The assembler supports the following instruction formats:
 
 - Move instructions: `mov`
   - Format: `<opcode> <R1> <R2>`
-  - Example: `mov R1 $10 R3`
+  - Example: `mov R1 $10`
+            or
+  - Example: `mov R1 R2`
 
 - Load/store instructions: `ld`, `st`
   - Format: `<opcode> <Reg> <mem_address>`
@@ -76,4 +78,4 @@ This assembler program was developed by Aditya Aggardwal, Gautam Singh, Kunal Sh
 
 ## Feedback and Contributions
 
-Feedback, bug reports, and contributions are welcome! If you encounter any issues or have suggestions for improvement, please open an issue or submit a pull request on the [GitHub repository](https://github
+Feedback, bug reports, and contributions are welcome! If you encounter any issues or have suggestions for improvement, please open an issue or submit a pull request on the [GitHub repository](https://github.com/gautam1228/Assembler.git)
