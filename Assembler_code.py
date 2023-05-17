@@ -1,3 +1,4 @@
+import sys
 opcode_dict = {
     "add": ["00000", "A"],
     "sub": ["00001", "A"],
@@ -180,10 +181,16 @@ def check_mov_type(line):
 # "A" for arithmetic, "B" for immediate, "C" for register,
 # "D" for load/store, "E" for jump, and "F" for halt.
 
-assem_code=open("Assembler/assem_code.txt")
-input_list=[i.strip().split(' ') for i in assem_code] 
+# assem_code=open("Assembler/assem_code.txt")
+# input_list=[i.strip().split(' ') for i in assem_code] 
 
-output= open("Assembler/binary_output.txt", 'w')
+# output= open("Assembler/binary_output.txt", 'w')
+input_list=[]
+for line in sys.stdin:
+    line = line.strip().split(' ')
+    if line == ['']:
+        break
+    input_list.append(line)
 
 hlt_Flag=False
 error_Flag=False
@@ -204,7 +211,7 @@ for line_no in range(len(input_list)):
             if line[1]=="hlt":
                 hlt_Flag=True
         else:
-            output.write("Error in Line "+ str(line_no+1) + "General Syntax Error\n")
+            sys.stdout.write("Error in Line "+ str(line_no+1) + "General Syntax Error\n")
             error_Flag=True
     elif line[0] == "var":
         var_count+=1
@@ -232,7 +239,7 @@ for line_no in range(len(input_list)):
         line.pop(0)
     
     if line == ['hlt'] and line_no != len(input_list) - 1:
-        output.write("Error in Line "+ str(line_no+1+1) + ": Can't execute lines after hlt\n")   
+        sys.stdout.write("Error in Line "+ str(line_no+1+1) + ": Can't execute lines after hlt\n")   
         error_Flag=True
         
     if len(line) and line[0] in opcode_dict:
@@ -245,35 +252,35 @@ for line_no in range(len(input_list)):
         if instr_type =='A':
             return_value= error_func_A(line, line_no)
             if return_value!=1:
-                output.write(return_value+"\n")
+                sys.stdout.write(return_value+"\n")
                 error_Flag=True
   
         elif instr_type =='B':
             #first we'll call the err_func_B
             return_value= error_func_B(line, line_no)
             if return_value!=1:
-                output.write(return_value+"\n")
+                sys.stdout.write(return_value+"\n")
                 error_Flag=True 
 
         elif instr_type =='C':
             #first we'll call the err_func_C
             return_value= error_func_C(line,opcode, line_no)
             if return_value!=1:
-                output.write(return_value+"\n")
+                sys.stdout.write(return_value+"\n")
                 error_Flag=True 
 
         elif instr_type =='D':
             #first we'll call the err_func_D
             return_value= error_func_D(line, line_no)
             if return_value!=1:
-                output.write(return_value+"\n")
+                sys.stdout.write(return_value+"\n")
                 error_Flag=True 
             
         elif instr_type =='E':
             #first we'll call the err_func_E
             return_value= error_func_E(line, line_no)
             if return_value!=1:
-                output.write(return_value+"\n")
+                sys.stdout.write(return_value+"\n")
                 error_Flag=True 
 
         elif instr_type =='F':
@@ -281,32 +288,32 @@ for line_no in range(len(input_list)):
             #if no error is caught then:
             return_value= error_func_F(line, line_no)
             if return_value!=1:
-                output.write(return_value+"\n")
+                sys.stdout.write(return_value+"\n")
                 error_Flag=True 
             
     elif line[0]=="var":
         if line_no>var_count:
-            output.write("Error in Line "+ str(line_no+1)+": Variables must be declared at the very beginning\n")
+            sys.stdout.write("Error in Line "+ str(line_no+1)+": Variables must be declared at the very beginning\n")
         if len(line)==2:
             try:
                 line[1]
             except Exception:
-                output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error\n")
+                sys.stdout.write("Error in Line "+ str(line_no+1) + ": General Syntax Error\n")
                 error_Flag=True
             var_dict[line[1]] = line_no+(len(input_list)-var_count)
             if not is_valid_variable_name(line[1]):
-                output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error\n")
+                sys.stdout.write("Error in Line "+ str(line_no+1) + ": General Syntax Error\n")
                 error_Flag=True
         else:
-            output.write("Error in Line "+ str(line_no+1) + ": General Syntax Error\n")
+            sys.stdout.write("Error in Line "+ str(line_no+1) + ": General Syntax Error\n")
             error_Flag=True
     else:
-        output.write("Error in Line "+ str(line_no+1) + ": Invalid Operand\n")
+        sys.stdout.write("Error in Line "+ str(line_no+1) + ": Invalid Operand\n")
         error_Flag=True
         
-# printing writing missing halt Instructions
+# sys.stdout.writeing writing missing halt Instructions
 if not hlt_Flag:
-    output.write("Error: No hlt instruction present\n")
+    sys.stdout.write("Error: No hlt instruction present\n")
     error_Flag=True
     
 #main loop for output        
@@ -331,28 +338,25 @@ for line_no in range(len(input_list)):
         
         if instr_type =='A':
             bin_instr=instr_A(opcode, line[1], line[2], line[3])
-            output.write(bin_instr+"\n")
+            sys.stdout.write(bin_instr+"\n")
         elif instr_type =='B':
             bin_instr=instr_B(opcode, line[1], line[2])
-            output.write(bin_instr+"\n")
+            sys.stdout.write(bin_instr+"\n")
         elif instr_type =='C':
             bin_instr=instr_C(opcode, line[1], line[2])
-            output.write(bin_instr+"\n")
+            sys.stdout.write(bin_instr+"\n")
         elif instr_type =='D':
             reg = line[1] # maybe useless but makes the function call a bit intuitive (I guess ?)
             mem_address = line[2]
             # bin_instr is the line that we'll write to the output file
             bin_instr = instr_D(opcode, reg, mem_address)
-            output.write(bin_instr+"\n")
+            sys.stdout.write(bin_instr+"\n")
         elif instr_type =='E':
             mem_address = line[1]
             bin_instr = instr_E(opcode, mem_address)
-            output.write(bin_instr+"\n")
+            sys.stdout.write(bin_instr+"\n")
         elif instr_type =='F':
             bin_instr = instr_F(opcode)
-            output.write(bin_instr)
+            sys.stdout.write(bin_instr)
     elif line[0]=="var":
         pass
-
-assem_code.close()
-output.close()
