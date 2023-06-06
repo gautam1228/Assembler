@@ -67,6 +67,7 @@ def func_call(instr, inputline):
         print("Invalid instruction")
 
 
+
 def func_cmp(inputline):
     # Implementation of the cmp instruction
     R1 = int(inputline[5:8],2) + 1
