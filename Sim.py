@@ -26,12 +26,58 @@ instr_dict={
 
 # add code here :
 
-#--------------------- ADTIYA'S PART ----------------------
+#-----------------------------------------------------------
+def func_ls(inputline):
+    # Implementation of the ls instruction
+    R1 = int(inputline[1:4],2) + 1
+    imm=int(inputline[4:11], 2) 
+    num=output_list[R1]
+    while(imm):
+        num=int(num*2)
+        imm-=1
+    output_list[R1]=num
+    output_list[8]=0 #reseting FLAGS register to 0
 
-# add code here :
+def func_xor(inputline):
+    # Implementation of the xor instruction
+    R1 = int(inputline[2:5],2) + 1
+    R2 = int(inputline[5:8], 2) + 1
+    R3 = int(inputline[8:11], 2) + 1
+    num1=output_list[R2]
+    num2=output_list[R3]
+    num=num1^num2
+    output_list[R1]=num
+    output_list[8]=0 #reseting FLAGS register to 0
 
-# ---------------------------------------------------------
+def func_or(inputline):
+    # Implementation of the or instruction
+    R1 = int(inputline[2:5],2) + 1
+    R2 = int(inputline[5:8], 2) + 1
+    R3 = int(inputline[8:11], 2) + 1
+    num1=output_list[R2]
+    num2=output_list[R3]
+    num=num1 | num2
+    output_list[R1]=num
+    output_list[8]=0 #reseting FLAGS register to 0
 
+def func_and(inputline):
+    # Implementation of the and instruction
+    R1 = int(inputline[2:5],2) + 1
+    R2 = int(inputline[5:8], 2) + 1
+    R3 = int(inputline[8:11], 2) + 1
+    num1=output_list[R2]
+    num2=output_list[R3]
+    num=num1 & num2
+    output_list[R1]=num
+    output_list[8]=0 #reseting FLAGS register to 0
+
+def func_not(inputline):
+    # Implementation of the not instruction
+    R1 = int(inputline[5:8],2) + 1
+    R2 = int(inputline[8:11],2) + 1
+    num=output_list[R2]
+    output_list[R1]=~num
+    output_list[8]=0 #reseting FLAGS register to 0
 
 def func_ld(inputline):
     # Implementation of the ld instruction
