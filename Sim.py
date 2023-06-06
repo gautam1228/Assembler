@@ -22,6 +22,72 @@ instr_dict={
     "11010": "hlt"
 }
 
+#-------------------- KUNAL'S PART ------------------------
+
+# add code here :
+
+#--------------------- ADTIYA'S PART ----------------------
+
+# add code here :
+
+# ---------------------------------------------------------
+
+
+def func_ld(inputline):
+    # Implementation of the ld instruction
+    R1=int(inputline[1:4],2) + 1
+    mem=int(inputline[4:11],2)
+    output_list[R1]=input_list[mem]
+    output_list[8]=0 #reseting FLAGS register to 0
+
+def func_st(inputline):
+    # Implementation of the st instruction
+    R1=int(int(inputline[1:4],2) + 1)
+    mem=int(inputline[4:11],2) 
+    input_list[mem]=str(bin(output_list[R1]))[2:].zfill(7)
+    output_list[8]=0 #reseting FLAGS register to 0
+
+def func_mul(inputline):
+    # Implementation of the mul instruction
+    R1 = int(inputline[2:5],2) + 1
+    R2 = int(inputline[5:8], 2) + 1
+    R3 = int(inputline[8:11], 2) + 1
+    num1=output_list[R2]
+    num2=output_list[R3]
+    num=num1*num2
+    if num<65536: #2^16
+        output_list[R1]=num
+        output_list[8]=0 #reseting FLAGS register to 0
+    else:
+        output_list[R1]=0
+        output_list[8]+=8
+
+def func_div(inputline):
+    # Implementation of the div instruction
+    R1 = int(inputline[5:8],2) + 1
+    R2 = int(inputline[8:11],2) + 1
+    if R2 != 0:
+        quotient=R1/R2
+        remainder=R1%R2
+        output_list[1]=quotient
+        output_list[2]=remainder
+        output_list[8]=0 #reseting FLAGS register to 0
+    else:
+        output_list[8]+=8
+        output_list[1]=0
+        output_list[2]=0
+
+def func_rs(inputline):
+    # Implementation of the rs instruction
+    R1 = int(inputline[1:4],2) + 1
+    imm=int(inputline[4:11], 2) 
+    num=output_list[R1]
+    while(imm):
+        num=int(num/2)
+        imm-=1
+    output_list[R1]=num
+    output_list[8]=0 #reseting FLAGS register to 0
+
 def func_call(instr, inputline):
     if instr == "add":
         func_add(inputline)
@@ -65,7 +131,6 @@ def func_call(instr, inputline):
         func_hlt(inputline)
     else:
         print("Invalid instruction")
-
 
 
 def func_cmp(inputline):
