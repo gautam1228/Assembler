@@ -22,11 +22,52 @@ instr_dict={
     "11010": "hlt"
 }
 
-#-------------------- KUNAL'S PART ------------------------
 
-# add code here :
+def func_add(inputline):
+    # Implementation of the add instruction
+    R1 = int(inputline[2:5],2) + 1
+    R2 = int(inputline[5:8], 2) + 1
+    R3 = int(inputline[8:11], 2) + 1
+    num1=output_list[R2]
+    num2=output_list[R3]
+    num=num1+num2
+    if num<65536: #2^16
+        output_list[R1]=num
+        output_list[8]=0 #reseting FLAGS register to 0
+    else:
+        output_list[R1]=0
+        output_list[8]+=8
+def func_sub(inputline):
+    # Implementation of the sub instruction
+    R1 = int(inputline[2:5],2) + 1
+    R2 = int(inputline[5:8], 2) + 1
+    R3 = int(inputline[8:11], 2) + 1
+    num1=output_list[R2]
+    num2=output_list[R3]
+    num=num1-num2
+    if num1>=num2: #2^16
+        output_list[R1]=num
+        output_list[8]=0 #reseting FLAGS register to 0
+    else:
+        output_list[R1]=0
+        output_list[8]+=8
 
-#-----------------------------------------------------------
+def func_movi(inputline):
+    # Implementation of the mov instruction
+    R1 = int(inputline[1:4],2) + 1
+    imm=int(inputline[4:11], 2) 
+    output_list[R1]=imm
+    output_list[8]=0 #reseting FLAGS register to 0
+
+def func_mov(inputline):
+    # Implementation of the mov instruction
+    R1 = int(inputline[5:8],2) + 1
+    R2 = int(inputline[8:11],2) + 1
+    num=output_list[R2]
+    output_list[R1]=num
+    output_list[8]=0 #reseting FLAGS register to 0
+
+
 def func_ls(inputline):
     # Implementation of the ls instruction
     R1 = int(inputline[1:4],2) + 1
